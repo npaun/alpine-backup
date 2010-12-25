@@ -1,0 +1,19 @@
+<?php
+#nwfs-roo: NWlogin mount script for alpine-backup
+#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+
+$passwd = "swordfish"; #Set your password here
+
+function mountfs($user,$server,$volume)
+ {
+  global $passwd;
+  $return = passthru("/opt/novell/ncl/bin/nwlogin -s $server -t foo-dev -u $user -c testusers.project5.foo-dev -p $passwd");
+  return(!$return);
+ }
+
+function umountfs($user,$server,$volume)
+ {
+  $return = passthru("/opt/novell/ncl/bin/nwlogout -t foo-dev");
+  return(!$return);
+ }
+

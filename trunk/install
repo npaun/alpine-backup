@@ -1,0 +1,44 @@
+#!/bin/bash
+#install script for alpine-backup
+#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+
+$conf = '/etc/backup.d'
+$man = '/usr/share/man/man.8'
+$lib = '/usr/lib/alpine-backup'
+$code = '/usr/sbin'
+
+echo "*** Installing alpine-backup 0.60 ***"
+
+if [[ $check = "1" ]]; then
+ $latest = wget -O - http://iceberg.dnsalias.net/softtrack/alp
+ if [[ $version != $latest]]; then
+  echo "This is not the latest version. (You have $version; latest is $latest)"
+ fi
+fi 
+
+$isphp = `which php`
+if [[ $isphp != 0 ]]; then
+ echo "Cannot find php. Exiting"
+ exit 1
+fi
+
+echo "Copying code to $code"
+cp alpine-backup $code/alpine-backup
+chmod u+x $code/alpine-backup
+ln -s alpine-backup alp #adding symlink
+
+if [[ -d "/etc/backup.d" ]]; then
+ echo "Preserving old configuration files"
+else
+ echo "Copying example configuration files"
+ rsync -av conf/ $conf
+fi
+
+
+echo "Copying lib files"
+rsync -av lib/ $lib
+
+#echo "Copying man pages"
+#cp man/ /usr/share/man/man.8
+
+echo "OK. Hope the install works!"

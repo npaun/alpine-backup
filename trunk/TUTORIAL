@@ -1,0 +1,60 @@
+#Tutorial for alpine-backup 0.60
+#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+
+* Contents *
+
+1. Setup
+2. Configuration File Format
+3. Mounting Setup
+4. (in) Frequently Asked Questions
+5. Features to implement
+
+* 1. Setup *
+
+Once you have installed, you should take a look at the example configuration file.
+Each file describes one server. To add volumes simply create a new section.
+The format is that of a standard ini file. In order to be useful, each section
+must have at least source and dest sections. Most options are configurable in
+these files.
+
+There are also some global options at the top of the alpine-backup file.
+These are: date format, default options, include path and the path to the
+configuration file. Rsync is assumed to be in your path. You may need to
+change the shebang line at the top to the right path for php5.
+
+After configuring, try the backup manually before adding it to your crontab.
+You will have to create the directories for the backups and setup mountpoints
+first. You may see errors about 'current' or 'deleting old backups'; these
+are normal and will probably only occur the first time. When you are using cron,
+you can view the logs by running mail on your system.
+
+The syntax: alpine-backup <server> <item>
+
+* 2. Configuration File Format *
+
+Name:	Description
+-------------------
+source: specifes the source of the backup. This may be local or remote.
+dest: specifies the destination of the backup. This may be local or remote.
+opt: specifies custom options specific to this backup.
+mount: causes mounting of specified volumes. More on this later.
+delete_after: causes old backups to be deleted after the specified time. (eg. '30 days ago')
+
+* 3. Mounting Setup *
+
+mount = "nwfs","joe@foobar:MAIN","/mnt/mymountpoint"
+A mount option is composed of three parts separated by commas.
+The first part is the file system type. The second is the source
+in 'user@server:VOLUME' format. The third is the local mount point.
+Your mount point must also be set as the source.
+
+NOTE: You should modify your mount driver (usually located in /usr/bin/alpine-backup)
+to ensure correct settings (trees, contexts, passwords, etc.) are correctly set.
+
+* 4. (in) Frequently Asked Questions *
+
+* 5. Features to implement *
+
+- support for other file system mounting
+- support for backup of more than one item at a time
+ 

@@ -1,0 +1,26 @@
+;;T8 Config.
+
+[localfiles]
+;; Local Copy
+source = "/srv/www/htdocs/"
+dest = "/backup/localfiles/"
+delete_after = "30 days ago"
+
+[ceo]
+;; Standard SSH
+source = "backup@fooPC11:/home/bob/"
+dest = "/backup/ceo/"
+
+
+[foobilling]
+;; NWFS mounting
+mount = "nwfs","backup@foobilling:DATA","/var/opt/novell/nclmnt/.Servers/FOOBILLING/DATA"
+source = "/var/opt/novell/nclmnt/.Servers/FOOBILLING/DATA"
+dest = "/backup/foobilling/"
+
+[foodev_main]
+;; SSH with custom mounting
+opt = "-e 'ssh -p3134'"
+source = "test@foodev_main:/test/"
+dest = "/backup/foodev/main"
+

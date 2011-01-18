@@ -2,11 +2,11 @@
 #labels Featured
 == Contents ==
 
-1. Setup
-2. Configuration File Format
-3. Mounting Setup
-4. (in) Frequently Asked Questions
-5. Features to implement
+  # Setup
+  # Configuration File Format
+  # Mounting Setup
+  # (in) Frequently Asked Questions
+  # Features to implement
 
 == 1. Setup ==
 
@@ -41,6 +41,7 @@ The syntax: {{{alpine-backup <server> <item>}}}
 == 3. Mounting Setup ==
 
 {{{mount = "nwfs","joe@foobar:MAIN","/mnt/mymountpoint"}}}
+
 A mount option is composed of three parts separated by commas.
 The first part is the file system type. The second is the source
 in 'user@server:VOLUME' format. The third is the local mount point.

@@ -27,7 +27,7 @@ first. You may see errors about 'current' or 'deleting old backups'; these
 are normal and will probably only occur the first time. When you are using cron,
 you can view the logs by running mail on your system.
 
-The syntax: alpine-backup <server> <item>
+The syntax: {{{alpine-backup <server> <item>}}}
 
 == 2. Configuration File Format ==
 
@@ -36,11 +36,11 @@ The syntax: alpine-backup <server> <item>
 ||dest|| specifies the destination of the backup. This may be local or remote.||
 ||opt|| specifies custom options specific to this backup.||
 ||mount|| causes mounting of specified volumes. More on this later.||
-||delete_after: causes old backups to be deleted after the specified time. (eg. '30 days ago')||
+||delete_after|| causes old backups to be deleted after the specified time. (eg. '30 days ago')||
 
 == 3. Mounting Setup ==
 
-mount = "nwfs","joe@foobar:MAIN","/mnt/mymountpoint"
+{{{mount = "nwfs","joe@foobar:MAIN","/mnt/mymountpoint"}}}
 A mount option is composed of three parts separated by commas.
 The first part is the file system type. The second is the source
 in 'user@server:VOLUME' format. The third is the local mount point.

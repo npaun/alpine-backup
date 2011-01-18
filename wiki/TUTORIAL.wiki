@@ -21,11 +21,11 @@ These are: date format, default options, include path and the path to the
 configuration file. Rsync is assumed to be in your path. You may need to
 change the shebang line at the top to the right path for php5.
 
-After configuring, try the backup manually before adding it to your crontab.
+After configuring, try the backup manually before adding it to your _crontab_.
 You will have to create the directories for the backups and setup mountpoints
 first. You may see errors about 'current' or 'deleting old backups'; these
 are normal and will probably only occur the first time. When you are using cron,
-you can view the logs by running mail on your system.
+you can view the logs by running _mail_ on your system.
 
 The syntax: {{{alpine-backup <server> <item>}}}
 
@@ -47,7 +47,7 @@ The first part is the file system type. The second is the source
 in 'user@server:VOLUME' format. The third is the local mount point.
 Your mount point must also be set as the source.
 
-NOTE: You should modify your mount driver (usually located in /usr/bin/alpine-backup)
+*NOTE:* You should modify your mount driver (usually located in _/usr/bin/alpine-backup_)
 to ensure correct settings (trees, contexts, passwords, etc.) are correctly set.
 
 == 4. (in) Frequently Asked Questions ==

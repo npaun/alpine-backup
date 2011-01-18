@@ -31,13 +31,12 @@ The syntax: alpine-backup <server> <item>
 
 == 2. Configuration File Format ==
 
-Name:	Description
--------------------
-source: specifes the source of the backup. This may be local or remote.
-dest: specifies the destination of the backup. This may be local or remote.
-opt: specifies custom options specific to this backup.
-mount: causes mounting of specified volumes. More on this later.
-delete_after: causes old backups to be deleted after the specified time. (eg. '30 days ago')
+||Name ||Description ||
+||source ||specifes the source of the backup. This may be local or remote.||
+||dest|| specifies the destination of the backup. This may be local or remote.||
+||opt|| specifies custom options specific to this backup.||
+||mount|| causes mounting of specified volumes. More on this later.||
+||delete_after: causes old backups to be deleted after the specified time. (eg. '30 days ago')||
 
 == 3. Mounting Setup ==
 
@@ -54,5 +53,5 @@ to ensure correct settings (trees, contexts, passwords, etc.) are correctly set.
 
 == 5. Features to implement ==
 
-* support for other file system mounting
-* support for backup of more than one item at a time
+  * support for other file system mounting
+  * support for backup of more than one item at a time

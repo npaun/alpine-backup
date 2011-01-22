@@ -2,8 +2,29 @@
 
 == Contents ==
 
-== 1. Mount Drivers ==
+  # Driver "API"
+  # Examples
+
+== 1. Driver "API" ==
+
+Mount drivers are composed of two functions: `mountfs` and `umountfs`. They are called at the beginning and end of the backup process. Mount drivers can also be used to perform database dumps. Function prototypes:
+
+{{{
+#Mounting function
+function mountfs($user, $server, $volume, $mountpoint="")
+ {
+  #Your code here
+ }
+
+#Umount function
+function umountfs($user, $server, $volume, $mountpoint="")
+ {
+  #Your code here
+ }
+}}}
+
+*NOTE:* Mount driver files must have names ending in `-roo` or they will not be called.
+
+*NOTE:* Due to a bug, the 4th argument is not actually passed to the driver, so it should be an optional argument.
 
 == 2. Examples ==
-
-== 3. Issues ==

@@ -75,6 +75,7 @@ function wrapper($conf,$item)
    {
     mount_roo($mount); #Mount
    }
+  passthru("mkdir -p $dest"); #Create entire backup directory structure (mkdir() creates one level)
   backup(@$opt,$source,$dest,$date,$item);
   if (isset($mount))
   {

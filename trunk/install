@@ -1,44 +1,31 @@
 #!/bin/bash
-#install script for alpine-backup
-#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+#alpine-backup installer
+#(C) Copyright 2009-2011 Nicholas Paun. All Rights Reserved.
 
-$conf = '/etc/backup.d'
-$man = '/usr/share/man/man.8'
-$lib = '/usr/lib/alpine-backup'
-$code = '/usr/sbin'
+INSTALLDIR="/alpine-backup" #Directory to copy all files to (if set)
 
-echo "*** Installing alpine-backup 0.60 ***"
+BINDIR="/usr/sbin" #Directory to copy code
+LIBDIR="/usr/lib/alpine-backup/" #Directory to copy mount drivers, etc.
+CONFDIR="/etc/alpine-backup/" #Directory to copy configuration files
 
-if [[ $check = "1" ]]; then
- $latest = wget -O - http://iceberg.dnsalias.net/softtrack/alp
- if [[ $version != $latest]]; then
-  echo "This is not the latest version. (You have $version; latest is $latest)"
- fi
-fi 
-
-$isphp = `which php`
-if [[ $isphp != 0 ]]; then
- echo "Cannot find php. Exiting"
+which php &> /dev/null
+if [[ $? != 0 ]]; then
+ echo "PHP not found. Exiting."
  exit 1
 fi
 
-echo "Copying code to $code"
-cp alpine-backup $code/alpine-backup
-chmod u+x $code/alpine-backup
-ln -s alpine-backup alp #adding symlink
-
-if [[ -d "/etc/backup.d" ]]; then
- echo "Preserving old configuration files"
-else
- echo "Copying example configuration files"
- rsync -av conf/ $conf
+which rsync &> /dev/null
+if [[ $? != 0 ]]; then
+ echo "rsync not found. Exiting."
+ exit 1
 fi
 
+if [[ $1 = "-i" ]]; then
+ rsync -av ./ $INSTALLDIR
+else
+ rsync -av ./ $BINDIR
+ rsync -av ./lib/ $LIBDIR
+ rsync -av ./conf/ $CONFDIR
+fi
 
-echo "Copying lib files"
-rsync -av lib/ $lib
-
-#echo "Copying man pages"
-#cp man/ /usr/share/man/man.8
-
-echo "OK. Hope the install works!"
+exit 0

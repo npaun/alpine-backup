@@ -67,6 +67,20 @@ function delete_old($dest,$keep)
    }
  }
 
+function link_check($dest,$name)
+ {
+  if (is_link("$dest/current"))
+   {
+    $link = @readlink("$dest/current"); #Find where the link is pointing to
+    if (!file_exists($link))
+     {
+      echo("* Backup Faliure ($name): The current symlink points to a non-existent location.\n");
+      die(4);
+     }
+   }
+ }
+
+
 function wrapper($conf,$item)
  {
   $date = date(DATE_FORMAT);
@@ -75,8 +89,11 @@ function wrapper($conf,$item)
    {
     mount_roo($mount); #Mount
    }
-  passthru("mkdir -p $dest"); #Create entire backup directory structure (mkdir() creates one level)
+  passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
+  link_check($dest,$item); #Check for invalid link-dests
+
   backup(@$opt,$source,$dest,$date,$item);
+
   if (isset($mount))
   {
    mount_roo($mount,TRUE); #Unmount

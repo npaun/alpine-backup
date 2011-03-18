@@ -20,7 +20,10 @@ if [[ $? != 0 ]]; then
  exit 1
 fi
 
-if [[ $1 = "-i" ]]; then
+if [[ $1 = "-d" ]]; then
+ if [[ $2 != "" ]]; then
+  INSTALLDIR="$2" #Allow user to choose installdir
+ fi
  rsync -av ./ $INSTALLDIR
 else
  rsync -av ./ $BINDIR

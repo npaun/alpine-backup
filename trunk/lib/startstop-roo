@@ -1,0 +1,17 @@
+<?php
+#startstop-roo: Start and stop services for backup
+#(C) Copyright 2011 Nicholas Paun. All Rights Reserved.
+
+function mountfs($user,$server,$command,$point=null)
+ {
+  $return = passthru("ssh $user@$server '$command stop'");
+  return(!$return);
+ }
+
+function umountfs($user,$server,$command,$point=null)
+ {
+  $return = passthru("ssh $user@$server '$command start'");
+  return(!$return);
+ }
+?>
+

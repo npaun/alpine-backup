@@ -1,20 +1,20 @@
 #!/usr/bin/php
 <?php
 #alp: alpine-backup Proto6
-#(C) Copyright 2007-2010 Nicholas Paun. All Rights Reserved.
+#(C) Copyright 2007-2011 Nicholas Paun. All Rights Reserved.
 /*Snowflake 060*/
 
 
 define('OPTIONS','-av');
 define('DATE_FORMAT','Y-m-d');
 define('INCLUDE_PATH','/usr/lib/alpine-backup/');
-define('CONFIG_PATH','/etc/backup.d/');
+define('CONFIG_PATH','/etc/alpine-backup/');
 
 if (@$argv[1] == "-h")
  {
   echo("alpine-backup Version: 0.60\n");
   echo("Syntax: ".$argv[0]." <server> <item>\n");
-  echo("Copyright 2007-2010 Nicholas Paun\n");
+  echo("Copyright 2007-2011 Nicholas Paun\n");
   die(0);
  }
 
@@ -25,7 +25,14 @@ if($argc != 3)
  }
 
 $conf = parse_ini_file(CONFIG_PATH.$argv[1],TRUE);
-$item = $argv[2]; 
+$item = $argv[2];
+
+if (!isset($conf["$item"]))
+ {
+  echo("* Cannot backup $item on ".$argv[1].": Invalid backup item.\n");
+  die(3);
+ }
+
 echo("* Backing up $item on ".$argv[1].".\n");
 
 function mount_roo($data,$umount=FALSE)

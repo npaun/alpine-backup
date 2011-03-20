@@ -38,7 +38,7 @@ function mount_roo($data,$umount=FALSE)
   
   if (!$umount) 
    {
-    $return = mountfs($user,$server,$volume);
+    $return = mountfs($user,$server,$volume,$point);
     if (!$return)
      {
       echo("* Failed to mount $volume: mount script unsucessful.\n");
@@ -47,7 +47,7 @@ function mount_roo($data,$umount=FALSE)
     }
   else
   {
-   $return = umountfs($user,$server,$volume);
+   $return = umountfs($user,$server,$volume,$point);
    if (!$return) echo("* WARNING: Could not unmount $volume.\n");
   }
  }

@@ -37,7 +37,7 @@ echo("* Backing up $item on ".$argv[1].".\n");
 
 function mount_roo($data,$umount=FALSE)
  {
-  list($type,$src,$point) = explode(",",$data);
+  @list($type,$src,$point) = explode(",",$data);
   list($user,$host) = explode("@",$src);
   list($server,$volume) = explode(":",$host);
 

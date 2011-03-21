@@ -2,6 +2,7 @@
 #nwfs-roo: NWlogin mount script for alpine-backup
 #(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
 
+global $passwd;
 $passwd = "swordfish"; #Set your password here
 
 function mountfs($user,$server,$volume,$point=null)

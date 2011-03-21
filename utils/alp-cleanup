@@ -1,0 +1,22 @@
+<?php
+#alp-cleanup: Cleanup old backups that weren't removed correctly
+#(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
+
+$conf = parse_ini_file($argv[1],TRUE);
+$item = $argv[2]
+
+if($argc != 3)
+ {
+  echo("Invalid number of arguments.\nSyntax: alp-cleanup <server> <item>\n"); 
+  die(2);
+ }
+
+if (!isset($conf["$item"))
+ {
+  echo("* Cleanup Failure ($item): Invalid item.");
+  die(1);
+ }
+
+echo("* Cleaning up old backups ($item on ".$argv[1].").\n");
+exec("find $dest/ -maxdepth 1 -type d -daystart -ctime $keep -exec rm -rv {} \;",$out,$return);
+?>

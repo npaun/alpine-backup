@@ -48,7 +48,7 @@ function mount_roo($data,$umount=FALSE)
     $return = mountfs($user,$server,$volume,$point);
     if (!$return)
      {
-      echo("* Failed to mount $volume: mount script unsucessful.\n");
+      echo("* Failed to mount $volume: mount script unsuccessful.\n");
       die(2);
      }
     }
@@ -81,7 +81,7 @@ function link_check($dest,$name)
     $link = @readlink("$dest/current"); #Find where the link is pointing to
     if (!file_exists($link))
      {
-      echo("* Backup Faliure ($name): The current symlink points to a non-existent location.\n");
+      echo("* Backup Failure ($name): The current symlink points to a non-existent location.\n");
       die(4);
      }
    }
@@ -117,12 +117,12 @@ function backup($opt,$src,$dest,$date,$name)
   passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
   if ($return != 0)
    {
-    echo("* Backup Failure ($name): rsync did not finish sucessfully.\n");
+    echo("* Backup Failure ($name): rsync did not finish successfully.\n");
     die(1);
    }  
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
-  echo("* Backup Sucessful: $name\n");
+  echo("* Backup Successful: $name\n");
  }
 
 wrapper($conf,$item);

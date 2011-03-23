@@ -1,5 +1,5 @@
-#Readme for alpine-backup 0.60
-#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+#Readme for alpine-backup 0.61
+#(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
 
 * Contents *
 
@@ -17,7 +17,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 * 2. Issues *
 
 - only volume by volume backup is supported
-- so far only nwfs and local mount are supported
 - you must append 'ago' to delete_after options
 - no man page
 
@@ -35,8 +34,14 @@ Have a lot of fun!
 
 * 5. Changelog *
 
+- Version 0.61
+ - directory auto-creation
+ - checking for bad current links
+ - MySQL and service start/stop agents
+ - utils/ directory
+
 - Sixth Version
  - complete rewrite
 
 * 6. Contact *
-Nicholas Paun <nicholaspaun@gmail.com>, http://iceberg.dnsalias.net
+Nicholas Paun <np@icebergsystems.ca>, http://www.icebergsystems.ca/

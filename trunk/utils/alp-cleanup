@@ -3,7 +3,7 @@
 #alp-cleanup: Cleanup old backups that weren't removed correctly
 #(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
 
-$conf = parse_ini_file("/etc/backup.d/".$argv[1],TRUE);
+$conf = parse_ini_file("/etc/alpine-backup/".$argv[1],TRUE);
 $item = $argv[2];
 
 if($argc != 3)
@@ -22,5 +22,5 @@ extract($conf["$item"]);
 echo("* Cleaning up old backups ($item on ".$argv[1].").\n");
 
 $old = date("Y-m-d",strtotime($delete_after));
-passthru("find $dest/ -maxdepth 1 -type d -daystart ! -newer $old -exec rm -rf {} \;");
+passthru("find $dest/ -maxdepth 1 -type d -daystart ! -newerct $old -exec rm -rf {} \;");
 ?>

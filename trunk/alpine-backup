@@ -2,7 +2,7 @@
 <?php
 #alp: alpine-backup Proto6
 #(C) Copyright 2007-2011 Nicholas Paun. All Rights Reserved.
-/*Snowflake 060*/
+/*Knut 061*/
 
 
 define('OPTIONS','-av');
@@ -12,7 +12,7 @@ define('CONFIG_PATH','/etc/alpine-backup/');
 
 if (@$argv[1] == "-h")
  {
-  echo("alpine-backup Version: 0.60\n");
+  echo("alpine-backup Version: 0.61\n");
   echo("Syntax: ".$argv[0]." <server> <item>\n");
   echo("Copyright 2007-2011 Nicholas Paun\n");
   die(0);

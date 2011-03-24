@@ -8,6 +8,13 @@ BINDIR="/usr/sbin" #Directory to copy code
 LIBDIR="/usr/lib/alpine-backup/" #Directory to copy mount drivers, etc.
 CONFDIR="/etc/alpine-backup/" #Directory to copy configuration files
 
+if [[ $1 = "-h" ]]; then
+ echo "alpine-backup installer (for version 0.61)"
+ echo "(C) Copyright 2009-2011 Nicholas Paun. All Rights Reserved."
+ echo "Usage: $0 for normal install or $0 -d <directory> to install in directory"
+ exit 0
+fi
+
 which php &> /dev/null
 if [[ $? != 0 ]]; then
  echo "PHP not found. Exiting."
@@ -26,7 +33,7 @@ if [[ $1 = "-d" ]]; then
  fi
  rsync -av ./ $INSTALLDIR
 else
- rsync -av ./ $BINDIR
+ rsync -av ./alp* $BINDIR
  rsync -av ./lib/ $LIBDIR
  rsync -av ./conf/ $CONFDIR
 fi

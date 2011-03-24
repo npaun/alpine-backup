@@ -1,0 +1,27 @@
+<?php
+#mysql-roo: MySQL driver script for alpine-backup
+#(C) Copyright 2011 Nicholas Paun. All Rights Reserved.
+
+global $passwd;
+$passwd = "swordfish"; #Set your password here
+
+function mountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
+ {
+  global $passwd;
+  exec("mysql -p$passwd -u $user -h $server $db -e 'show tables' | egrep -v 'Tables_in_'",$tables);
+
+  foreach ($tables as $table) #Dump each table individually
+  {
+   $return = passthru("mysqldump -p$passwd -u $user -h $server --skip-dump-date $db $table > $dumpdir/$table");
+   passthru("find $dumpdir -exec touch -d 2010-04-01 {} \;"); #Consistent date is needed for linking
+  }
+
+  return(!$return);
+ }
+
+function umountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
+ {
+  $return = passthru("rm -rf $dumpdir/");
+  return(!$return);
+ }
+

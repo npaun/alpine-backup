@@ -109,6 +109,10 @@ function wrapper($conf,$item)
   {
    delete_old($dest,$delete_after); //Remove old backups
   }
+  if ($return == FALSE)
+   {
+    die(1); #Return exit code for bad backup
+   }
  }
 
 function backup($opt,$src,$dest,$date,$name)
@@ -118,11 +122,13 @@ function backup($opt,$src,$dest,$date,$name)
   if ($return != 0)
    {
     echo("* Backup Failure ($name): rsync did not finish successfully.\n");
-    die(1);
+    return(FALSE);
    }  
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
   echo("* Backup Successful: $name\n");
+ 
+  return(TRUE);
  }
 
 wrapper($conf,$item);

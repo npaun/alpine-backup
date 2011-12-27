@@ -12,7 +12,7 @@ function mountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
 
   foreach ($tables as $table) #Dump each table individually
   {
-   $return = passthru("mysqldump -p$passwd -u $user -h $server --skip-dump-date $db $table > $dumpdir/$table");
+   passthru("mysqldump -p$passwd -u $user -h $server --skip-dump-date $db $table > $dumpdir/$table",$return);
    passthru("find $dumpdir -exec touch -d 2010-04-01 {} \;"); #Consistent date is needed for linking
   }
 
@@ -21,7 +21,7 @@ function mountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
 
 function umountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
  {
-  $return = passthru("rm -rf $dumpdir/");
+  passthru("rm -rf $dumpdir/",$return);
   return(!$return);
  }
 

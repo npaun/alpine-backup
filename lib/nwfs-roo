@@ -8,13 +8,13 @@ $passwd = "swordfish"; #Set your password here
 function mountfs($user,$server,$volume,$point=null)
  {
   global $passwd;
-  $return = passthru("/opt/novell/ncl/bin/nwlogin -s $server -t foo-dev -u $user -c testusers.project5.foo-dev -p $passwd");
+  passthru("/opt/novell/ncl/bin/nwlogin -s $server -t foo-dev -u $user -c testusers.project5.foo-dev -p $passwd",$return);
   return(!$return);
  }
 
 function umountfs($user,$server,$volume,$point=null)
  {
-  $return = passthru("/opt/novell/ncl/bin/nwlogout -t foo-dev");
+  passthru("/opt/novell/ncl/bin/nwlogout -t foo-dev",$return);
   return(!$return);
  }
 

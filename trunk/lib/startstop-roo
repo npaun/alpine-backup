@@ -4,13 +4,13 @@
 
 function mountfs($user,$server,$command,$point=null)
  {
-  $return = passthru("ssh $user@$server '$command stop'");
+  passthru("ssh $user@$server '$command stop'",$return);
   return(!$return);
  }
 
 function umountfs($user,$server,$command,$point=null)
  {
-  $return = passthru("ssh $user@$server '$command start'");
+  passthru("ssh $user@$server '$command start'",$return);
   return(!$return);
  }
 

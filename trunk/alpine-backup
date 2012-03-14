@@ -27,21 +27,29 @@ function arg_parse($argv,$argc)
     die(3);
    }
 
-   $conf = parse_ini_file(CONFIG_PATH.$argv[1],TRUE);
    $server = $argv[1];
-   $item = $argv[2];
+   $item = @$argv[2];
+   $conf = parse_ini_file(CONFIG_PATH.$server,TRUE);
 
-  if (isset($argv[3])) #Third argument is master server
-  {
-   $sync = $argv[3];
-   echo("* Syncing $item on $server from $sync\n");
-  }
-  else
-  {
-   $sync = FALSE;
-   echo("* Backing up $item on $server\n");
-  }
+   $sync = isset($argv[3])? $argv[3]: FALSE;
   
+   if (!isset($item) || $item = "all") #Backup everything
+    {
+      foreach ($conf as $item => $config)
+       passthru($argv[0]." $server $item");
+    }
+   else if (!isset($conf["$item"]))
+    { 
+     echo("* Cannot backup $item on $server: Invalid backup item.\n");
+     die(3);
+    }
+  
+   if ($sync)  
+    echo("* Syncing $item on $server from $sync\n");
+   else
+    echo("* Backing up $item on $server\n");
+  
+
   wrapper($conf,$item,$sync);
  }
 
@@ -51,7 +59,7 @@ function mount_roo($data,$umount=FALSE)
   list($user,$host) = explode("@",$src);
   list($server,$volume) = explode(":",$host);
 
-  require_once(INCLUDE_PATH."$type-roo"); //Loads by filesystem
+  require_once(INCLUDE_PATH."$type-roo"); #Loads by filesystem
   
   if (!$umount) 
    {
@@ -113,12 +121,6 @@ function link_check($dest,$name)
 
 function wrapper($conf,$item,$sync)
  {
-  if (!isset($conf["$item"]))
-   { 
-    echo("* Cannot backup $item: Invalid backup item.\n");
-    die(3);
-   }
-
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
 
@@ -133,11 +135,11 @@ function wrapper($conf,$item,$sync)
   if (isset($mount) && !$sync)
    mount_roo($mount,TRUE); #Unmount
  
- if (isset($delete_after))
+  if (isset($delete_after))
    delete_old_scan($dest,$delete_after); #Remove old backups
   
   if (!$flag)
-    die(1); #Return exit code for bad backup
+   die(1); #Return exit code for bad backup
    
  }
 
@@ -145,16 +147,16 @@ function backup($opt,$src,$dest,$date,$name,$sync)
  {
   $_opt = OPTIONS;
 
- if (!$sync) #Doing actual backup
-  passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
- else
-  passthru("rsync $_opt $opt --link-dest $dest/current $sync:$dest/current/ $dest/$date",$return); #Get current backup on master server (using dest) and send it to dest on the local machine
+  if (!$sync) #Doing actual backup
+   passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
+  else
+   passthru("rsync $_opt $opt --link-dest $dest/current $sync:$dest/current/ $dest/$date",$return); #Get current backup on master server (using dest) and send it to dest on the local machine
 
   if ($return != 0)
-    {
-     echo("* Backup Failure ($name): rsync did not finish successfully.\n");
-     return(FALSE);
-    }  
+   {
+    echo("* Backup Failure ($name): rsync did not finish successfully.\n");
+    return(FALSE);
+   }  
 
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");

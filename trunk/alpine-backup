@@ -18,14 +18,19 @@ if (@$argv[1] == "-h")
   die(0);
  }
 
-if($argc != 3)
+if($argc < 2 || $argc > 4)
  {
-  echo("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n"); 
+  echo("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n");
   die(3);
  }
 
 $conf = parse_ini_file(CONFIG_PATH.$argv[1],TRUE);
 $item = $argv[2];
+
+if (isset($argv[3])) #Third argument is master server
+ $sync = $argv[3];
+else
+ $sync = FALSE;
 
 if (!isset($conf["$item"]))
  {
@@ -113,7 +118,7 @@ function wrapper($conf,$item)
   passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
   link_check($dest,$item); #Check for invalid link-dests
 
-  backup(@$opt,$source,$dest,$date,$item);
+  $flag = backup(@$opt,$source,$dest,$date,$item); #Hold errors until cleanup is done
 
   if (isset($mount))
    mount_roo($mount,TRUE); #Unmount
@@ -121,7 +126,7 @@ function wrapper($conf,$item)
  if (isset($delete_after))
    delete_old_scan($dest,$delete_after); #Remove old backups
   
-  if ($return == FALSE)
+  if ($flag == FALSE)
     die(1); #Return exit code for bad backup
    
  }

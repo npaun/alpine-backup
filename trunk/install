@@ -35,7 +35,7 @@ if [[ $1 = "-d" ]]; then
  sed -i s_/etc/alpine-backup/_$INSTALLDIR/conf/_gi $INSTALLDIR/alpine-backup #Edit code to match installdir
  sed -i s_/usr/lib/alpine-backup/_$INSTALLDIR/lib/_gi $INSTALLDIR/alpine-backup
 else
- rsync -av ./alp* $BINDIR
+ rsync -av ./*alp* $BINDIR
  rsync -av ./lib/ $LIBDIR
  rsync -av ./conf/ $CONFDIR
 fi

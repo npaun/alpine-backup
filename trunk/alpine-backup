@@ -12,7 +12,7 @@ define('CONFIG_PATH','/etc/alpine-backup/');
 
 if (@$argv[1] == "-h")
  {
-  echo("alpine-backup Version: 0.61\n");
+  echo("alpine-backup Version: 0.62\n");
   echo("Syntax: ".$argv[0]." <server> <item>\n");
   echo("Copyright 2007-2011 Nicholas Paun\n");
   die(0);
@@ -57,21 +57,6 @@ function mount_roo($data,$umount=FALSE)
    $return = umountfs($user,$server,$volume,$point);
    if (!$return) echo("* WARNING: Could not unmount $volume.\n");
   }
- }
-
-function delete_old($dest,$keep)
- {
-  $time = strtotime($keep); #Accept values such as '30 days ago'
-  $old_date = date(DATE_FORMAT,$time);
-
-  if (file_exists("$dest/$old_date")) #Prevent accidental deletion of entire backup directory
-  {
-   exec("rm -r $dest/$old_date",$out,$return);
-  }
-  if (!isset($return) || $return != 0)
-   {
-    echo("* Failed to delete old backups from $keep.\n");
-   }
  }
 
 function link_check($dest,$name)

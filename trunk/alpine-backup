@@ -10,35 +10,40 @@ define('DATE_FORMAT','Y-m-d');
 define('INCLUDE_PATH','/usr/lib/alpine-backup/');
 define('CONFIG_PATH','/etc/alpine-backup/');
 
-if (@$argv[1] == "-h")
+
+function arg_parse($argv,$argc)
  {
-  echo("alpine-backup Version: 0.62\n");
-  echo("Syntax: ".$argv[0]." <server> <item>\n");
-  echo("Copyright 2007-2011 Nicholas Paun\n");
-  die(0);
+  if (@$argv[1] == "-h")
+   {
+    echo("alpine-backup Version: 0.62\n");
+    echo("Syntax: ".$argv[0]." <server> <item>\n");
+    echo("Copyright 2007-2011 Nicholas Paun\n");
+    die(0);
+   }
+
+  if ($argc < 2 || $argc > 4)
+   {
+    echo("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n");
+    die(3);
+   }
+
+   $conf = parse_ini_file(CONFIG_PATH.$argv[1],TRUE);
+   $server = $argv[1];
+   $item = $argv[2];
+
+  if (isset($argv[3])) #Third argument is master server
+  {
+   $sync = $argv[3];
+   echo("* Syncing $item on $server from $sync\n");
+  }
+  else
+  {
+   $sync = FALSE;
+   echo("* Backing up $item on $server\n");
+  }
+  
+  wrapper($conf,$item,$sync);
  }
-
-if($argc < 2 || $argc > 4)
- {
-  echo("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n");
-  die(3);
- }
-
-$conf = parse_ini_file(CONFIG_PATH.$argv[1],TRUE);
-$item = $argv[2];
-
-if (isset($argv[3])) #Third argument is master server
- $sync = $argv[3];
-else
- $sync = FALSE;
-
-if (!isset($conf["$item"]))
- {
-  echo("* Cannot backup $item on ".$argv[1].": Invalid backup item.\n");
-  die(3);
- }
-
-echo("* Backing up $item on ".$argv[1].".\n");
 
 function mount_roo($data,$umount=FALSE)
  {
@@ -108,6 +113,12 @@ function link_check($dest,$name)
 
 function wrapper($conf,$item,$sync)
  {
+  if (!isset($conf["$item"]))
+   { 
+    echo("* Cannot backup $item: Invalid backup item.\n");
+    die(3);
+   }
+
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
 
@@ -152,5 +163,4 @@ function backup($opt,$src,$dest,$date,$name,$sync)
   return(TRUE);
  }
 
-wrapper($conf,$item,$sync); #Do the backup
-
+arg_parse($argv,$argc);

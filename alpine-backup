@@ -106,36 +106,39 @@ function link_check($dest,$name)
  }
 
 
-function wrapper($conf,$item)
+function wrapper($conf,$item,$sync)
  {
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
 
-  if (isset($mount))
+  if (isset($mount) && !$sync) #Don't actually mount when syncing
     mount_roo($mount); #Mount
-
 
   passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
   link_check($dest,$item); #Check for invalid link-dests
 
-  $flag = backup(@$opt,$source,$dest,$date,$item); #Hold errors until cleanup is done
+  $flag = backup(@$opt,$source,$dest,$date,$item,$sync); #Hold errors until cleanup is done
 
-  if (isset($mount))
+  if (isset($mount) && !$sync)
    mount_roo($mount,TRUE); #Unmount
  
  if (isset($delete_after))
    delete_old_scan($dest,$delete_after); #Remove old backups
   
-  if ($flag == FALSE)
+  if (!$flag)
     die(1); #Return exit code for bad backup
    
  }
 
-function backup($opt,$src,$dest,$date,$name)
+function backup($opt,$src,$dest,$date,$name,$sync)
  {
   $_opt = OPTIONS;
+
+ if (!$sync) #Doing actual backup
   passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
- 
+ else
+  passthru("rsync $_opt $opt --link-dest $dest/current $sync:$dest/current/ $dest/$date",$return); #Get current backup on master server (using dest) and send it to dest on the local machine
+
   if ($return != 0)
     {
      echo("* Backup Failure ($name): rsync did not finish successfully.\n");
@@ -149,5 +152,5 @@ function backup($opt,$src,$dest,$date,$name)
   return(TRUE);
  }
 
-wrapper($conf,$item);
+wrapper($conf,$item,$sync); #Do the backup
 

@@ -11,6 +11,13 @@ define('INCLUDE_PATH','/usr/lib/alpine-backup/');
 define('CONFIG_PATH','/etc/alpine-backup/');
 
 
+function exitmsg($message,$code)
+ {
+  echo($message);
+  die($code);
+ }
+
+
 function arg_parse($argv,$argc)
  {
   if (@$argv[1] == "-h")
@@ -22,10 +29,7 @@ function arg_parse($argv,$argc)
    }
 
   if ($argc < 2 || $argc > 4)
-   {
-    echo("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n");
-    die(3);
-   }
+    exitmsg("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n",3);
 
    $server = $argv[1];
    $item = @$argv[2];
@@ -39,10 +43,7 @@ function arg_parse($argv,$argc)
        passthru($argv[0]." $server $item");
     }
    else if (!isset($conf["$item"]))
-    { 
-     echo("* Cannot backup $item on $server: Invalid backup item.\n");
-     die(3);
-    }
+     exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
   
    if ($sync)  
     echo("* Syncing $item on $server from $sync\n");
@@ -65,10 +66,7 @@ function mount_roo($data,$umount=FALSE)
    {
     $return = mountfs($user,$server,$volume,$point);
     if (!$return)
-     {
-      echo("* Failed to mount $volume: mount script unsuccessful.\n");
-      die(2);
-     }
+      exitmsg("* Failed to mount $volume: mount script unsuccessful.\n",2);
     }
   else
   {
@@ -112,8 +110,7 @@ function link_check($dest,$name)
     $link = @readlink("$dest/current"); #Find where the link is pointing to
     if (!file_exists($link))
      {
-      echo("* Backup Failure ($name): The current symlink points to a non-existent location.\n");
-      die(4);
+      exitmsg("* Backup Failure ($name): The current symlink points to a non-existent location.\n",4);
      }
    }
  }

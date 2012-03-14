@@ -59,6 +59,34 @@ function mount_roo($data,$umount=FALSE)
   }
  }
 
+function delete_old_scan($dest,$keep)
+ {
+  $dir = scandir("$dest/"); #Load directory as array
+  $delete_after = strtotime($keep." ago"); #Convert config option to unix time
+
+  echo("* Date $keep ago was ".date(DATE_FORMAT,$delete_after).".\n");
+
+  foreach($dir as $i => $file)
+   {
+    $unix = strtotime($file); #Convert directory name to unix time
+
+    if ($unix !== FALSE && $file != '.' &&  $file != '..') #Remove bogus entries
+      $internal["$unix"] = $file;
+   }
+
+  ksort($internal); # Sort the array
+
+  foreach($internal as $stamp => $file)
+   {
+    if ($stamp <= $delete_after) #If the file timestamp is lower than the threshold
+     {
+      /* echo("Delete: $dest/$file\n"); */ #Debugging
+      passthru("rm -r $dest/$file"); 
+     }
+   }
+ }
+
+
 function link_check($dest,$name)
  {
   if (is_link("$dest/current"))
@@ -77,38 +105,38 @@ function wrapper($conf,$item)
  {
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
+
   if (isset($mount))
-   {
     mount_roo($mount); #Mount
-   }
+
+
   passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
   link_check($dest,$item); #Check for invalid link-dests
 
   backup(@$opt,$source,$dest,$date,$item);
 
   if (isset($mount))
-  {
    mount_roo($mount,TRUE); #Unmount
-  }
+ 
  if (isset($delete_after))
-  {
-   delete_old($dest,$delete_after); //Remove old backups
-  }
+   delete_old_scan($dest,$delete_after); #Remove old backups
+  
   if ($return == FALSE)
-   {
     die(1); #Return exit code for bad backup
-   }
+   
  }
 
 function backup($opt,$src,$dest,$date,$name)
  {
   $_opt = OPTIONS;
   passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
+ 
   if ($return != 0)
-   {
-    echo("* Backup Failure ($name): rsync did not finish successfully.\n");
-    return(FALSE);
-   }  
+    {
+     echo("* Backup Failure ($name): rsync did not finish successfully.\n");
+     return(FALSE);
+    }  
+
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
   echo("* Backup Successful: $name\n");

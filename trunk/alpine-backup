@@ -17,7 +17,6 @@ function exitmsg($message,$code)
   die($code);
  }
 
-
 function arg_parse($argv,$argc)
  {
   if (@$argv[1] == "-h")
@@ -42,10 +41,11 @@ function arg_parse($argv,$argc)
       foreach ($conf as $item => $config)
        passthru($argv[0]." $server $item");
     }
+    
    else if (!isset($conf["$item"]))
      exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
   
-   if ($sync)  
+   if ($sync)
     echo("* Syncing $item on $server from $sync\n");
    else
     echo("* Backing up $item on $server\n");
@@ -54,7 +54,7 @@ function arg_parse($argv,$argc)
   wrapper($conf,$item,$sync);
  }
 
-function mount_roo($data,$umount=FALSE)
+function mount_roo($data,$umount = FALSE)
  {
   @list($type,$src,$point) = explode(",",$data);
   list($user,$host) = explode("@",$src);
@@ -69,10 +69,10 @@ function mount_roo($data,$umount=FALSE)
       exitmsg("* Failed to mount $volume: mount script unsuccessful.\n",2);
     }
   else
-  {
-   $return = umountfs($user,$server,$volume,$point);
-   if (!$return) echo("* WARNING: Could not unmount $volume.\n");
-  }
+   {
+    $return = umountfs($user,$server,$volume,$point);
+    if (!$return) echo("* WARNING: Could not unmount $volume.\n");
+   }
  }
 
 function delete_old_scan($dest,$keep)
@@ -90,18 +90,14 @@ function delete_old_scan($dest,$keep)
       $internal["$unix"] = $file;
    }
 
-  ksort($internal); # Sort the array
+  ksort($internal); #Sort the array
 
   foreach($internal as $stamp => $file)
    {
     if ($stamp <= $delete_after) #If the file timestamp is lower than the threshold
-     {
-      /* echo("Delete: $dest/$file\n"); */ #Debugging
-      passthru("rm -r $dest/$file"); 
-     }
+     passthru("rm -r $dest/$file"); 
    }
  }
-
 
 function link_check($dest,$name)
  {
@@ -109,12 +105,9 @@ function link_check($dest,$name)
    {
     $link = @readlink("$dest/current"); #Find where the link is pointing to
     if (!file_exists($link))
-     {
-      exitmsg("* Backup Failure ($name): The current symlink points to a non-existent location.\n",4);
-     }
+     exitmsg("* Backup Failure ($name): The current symlink points to a non-existent location.\n",4);
    }
  }
-
 
 function wrapper($conf,$item,$sync)
  {
@@ -132,12 +125,11 @@ function wrapper($conf,$item,$sync)
   if (isset($mount) && !$sync)
    mount_roo($mount,TRUE); #Unmount
  
-  if (isset($delete_after))
+  if (isset($delete_after) && !$flag) #Don't remove old backups if the current one fails (just in case)
    delete_old_scan($dest,$delete_after); #Remove old backups
   
   if (!$flag)
-   die(1); #Return exit code for bad backup
-   
+   die(1); #Return exit code for bad backup  
  }
 
 function backup($opt,$src,$dest,$date,$name,$sync)
@@ -157,7 +149,7 @@ function backup($opt,$src,$dest,$date,$name,$sync)
 
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
-  echo("* Backup Successful: $name\n");
+  echo("* Backup Successful: $name\n\n\n");
  
   return(TRUE);
  }

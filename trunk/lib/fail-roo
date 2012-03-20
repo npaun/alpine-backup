@@ -1,0 +1,17 @@
+<?php
+#fail-roo: Test driver for alpine-backup
+#(C) Copyright 2011 Nicholas Paun. All Rights Reserved.
+
+function mountfs($user,$server,$db,$dumpdir)
+ {
+  passthru('/bin/false',$return);
+  return(!$return);
+ }
+
+function umountfs($user,$server,$db,$dumpdir)
+ {
+  passthru('/bin/false',$return);
+  return(!$return);
+ }
+
+?>

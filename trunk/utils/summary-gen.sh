@@ -1,6 +1,7 @@
 #!/bin/bash
-#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+#(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
 
 echo -e "\n\n>>> Summary: <<<"
-grep "* Backup" $1
-
+grep "* Backup" /tmp/backup-out.$$
+rm /tmp/backup-out.$$
+#echo "(Backup finished at `date '+%F %R'`)"

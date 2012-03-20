@@ -1,0 +1,73 @@
+#!/usr/bin/php
+<?php
+define('OPTIONS','-a');
+define('SPOOL_FILE','/var/mail/root');
+define('DATA_PATH','/var/log/alpine-backup/');
+
+$_SERVERS = array("foobackup1","foobackup2","foo-offsite");
+
+function _var_export($var_name,$data)
+ {
+  $return = "\$$var_name = ";
+  $return .= var_export($data,TRUE);
+  $return .= ";\n\n";
+  
+  return($return);
+ }
+  
+
+function parse_mail($file)
+ {
+  $spool = file_get_contents($file);
+
+  $messages = explode('From ',$spool); #All messages start with From x@y, etc.
+  $messages = array_filter($messages,"trim"); #Get rid of whitespace
+
+  foreach ($messages as $message)
+   {
+    $mail = trim(strstr($message,"\n\n")); #Remove headers
+
+    preg_match('{\*\s(Backing up|Syncing)\s([\w-]*)\s+on\s+([\w-]*)}',$mail,$match); #Get type, item and server
+    $server = @$match[3];
+
+    if (!isset($server)) 
+     continue; #Don't bother processing non-alpine-backup mail
+
+    if (strpos($mail,'Fail') !== FALSE) #Any failure messages?
+     $works = FALSE;
+    else
+     $works = TRUE;
+
+    if ($match[1] != "Syncing")
+     $status["$server"] = $works;
+    else
+     $status["Sync $server"] = $works;
+
+   return($status);
+  }
+ }
+
+function main($servers)
+ {
+  $output = "<?php\n\n";
+  passthru("mkdir -p ".DATA_PATH); #Create the directory, just in case
+
+  foreach ($servers as $backup_server)
+   {
+     passthru("rsync ".OPTIONS." $backup_server:".SPOOL_FILE." ".DATA_PATH.$backup_server,$return); #Use rsync because spools are probably similar from day to day
+
+     if (!$return)
+      {
+       echo("* Retrieved spool from $backup_server\n");
+       $data = parse_mail(DATA_PATH.$backup_server); #Parse the backup server's spool file
+       $output .= _var_export("_STATUS['$backup_server']",$data); #Dump in chunks, for more readability
+      }
+     else
+      echo("* Failed to get data from $backup_server\n");
+   }
+
+  $output .= "?>";
+  return($output);
+ }
+
+file_put_contents(DATA_PATH.'DUMP',main($_SERVERS)); #Write it out to a file

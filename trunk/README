@@ -1,47 +1,42 @@
-#Readme for alpine-backup 0.61
-#(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
+#README for alpine-backup 0.62
+#(C) Copyright 2010-2012 Nicholas Paun. All Rights Reserved.
 
-* Contents *
+## Contents ##
 
-1. Warnings
-2. Issues
-3. How to Install
-4. Misc.
-5. Changelog
-6. Contact
+1. How to Install
+2. Misc.
+3. Changelog
+4. Contact
 
-* 1. Warnings *
+## 1. How to Install ##
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 1. Run ./install
+ 2. Read TUTORIAL
+ 3. Modify the example configuration file to your needs
+ 4. Set up the environment
+ 5. Try it out!
 
-* 2. Issues *
-
-- only volume by volume backup is supported
-- you must append 'ago' to delete_after options
-- no man page
-
-* 3. How to Install *
-
- 1. run ./install
- 2. read TUTORIAL
- 3. modify the example configuration file to your needs
- 4. set up the environment
- 5. try it out!
-
-* 4. Misc. *
+## 2. Misc. ##
 
 Have a lot of fun!
 
-* 5. Changelog *
+## 3. Changelog ##
 
-- Version 0.61
- - directory auto-creation
- - checking for bad current links
- - MySQL and service start/stop agents
- - utils/ directory
+* Version 0.62
+ * Fixed mount agent bugs
+ * Multi-item backups
+ * Better delete algorithm
+ * No-change syncing
+ * Reporting tools
 
-- Sixth Version
- - complete rewrite
+* Version 0.61
+ * Directory auto-creation
+ * Checking for bad current links
+ * MySQL and service start/stop agents
+ * utils/ directory
 
-* 6. Contact *
-Nicholas Paun <np@icebergsystems.ca>, http://www.icebergsystems.ca/
+* Sixth Version
+ * complete rewrite
+
+## 4. Contact ##
+Nicholas Paun <np@icebergsystems.ca>, http://icebergsystems.ca/

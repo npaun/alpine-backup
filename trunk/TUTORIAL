@@ -1,76 +1,86 @@
-#Tutorial for alpine-backup 0.60
-#(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
+#Tutorial for alpine-backup 0.62
+#(C) Copyright 2010-2012 Nicholas Paun. All Rights Reserved.
 
-* Contents *
+## Contents ##
 
 1. Setup
 2. Configuration File Format
-3. Mounting Setup
-4. (in) Frequently Asked Questions
-5. Features to implement
+3. Mounting Driver Setup
+4. No-change syncing
+5. Reporting Tools and other Utilities
+6. What's new
 
-* 1. Setup *
+## 1. Setup ##
 
-Once you have installed, you should take a look at the example configuration file.
+Once you have installed alpine-backup, you should take a look at the example configuration file.
 Each file describes one server. To add volumes simply create a new section.
-The format is that of a standard ini file. In order to be useful, each section
+The format is that of a standard INI file. In order to be useful, each section
 must have at least source and dest sections. Most options are configurable in
 these files.
 
 There are also some global options at the top of the alpine-backup file.
 These are: date format, default options, include path and the path to the
-configuration file. Rsync is assumed to be in your path. You may need to
-change the shebang line at the top to the right path for php5.
+configuration file. rsync is assumed to be in your path. You may need to
+change the shebang line at the top to the right path for *php5*.
 
 After configuring, try the backup manually before adding it to your crontab.
-You will have to setup mountpoints first. Directories are created automatically
-in version 0.61. You may see errors about 'current' or 'deleting old backups';
-these are normal and will probably only occur the first time. 
-When you are using cron, you can view the logs by running mail on your system.
+You will setup mount points first. You may see errors about 'current' or
+ 'deleting old backups'; these are normal and will probably only occur the first time. 
+When you are using cron, you can view the logs by running *mail* on your system.
 
-The syntax: alpine-backup <server> <item>
+The syntax:
+`alpine-backup <server> <item>`
 
-* 2. Configuration File Format *
+Or to backup all the items on a server:
+`alpine-backup <server>`
 
-Name:	Description
--------------------
-source: specifies the source of the backup. This may be local or remote.
-dest: specifies the destination of the backup. This may be local or remote.
-opt: specifies custom options specific to this backup.
-mount: causes mounting of specified volumes. More on this later.
-delete_after: causes old backups to be deleted after the specified time. (eg. '30 days ago')
+## 2. Configuration File Format ##
 
-* 3. Mounting Setup *
+| Name 	        | Description                                                                 |
+| ------------- | --------------------------------------------------------------------------- |
+| source 	      | Specifies the source of the backup. This may be local or remote.            |
+| dest 	        | Specifies the destination of the backup. This may be local or remote.       |
+| opt 	         | Sets custom options to be passed to rsync.  Specific to this volume.        |           
+| mount         | Causes mounting of specified volumes. More on this later.                   | 
+| delete_after  | Causes old backups to be deleted after the specified time. (e.g. '30 days') |          
 
-mount = "nwfs","joe@foobar:MAIN","/mnt/mymountpoint"
+## 3. Mount Driver Setup ##
+
+Mount drivers allow alpine-backup to mount filesystems, dump databases and perform other preparation activities for a backup.
+
+Format: `mount = "cifs","joe@foobar:/test/files","/mnt/mymountpoint"`
+
 A mount option is composed of three parts separated by commas.
 The first part is the file system type. The second is the source
-in 'user@server:VOLUME' format. The third is the local mount point.
+in `user@server:VOLUME` format. The third is the local mount point.
 Your mount point must also be set as the source.
 
-NOTE: You should modify your mount driver (usually located in /usr/bin/alpine-backup)
+**NOTE:** You should modify your mount driver (usually located in */usr/lib/alpine-backup*)
 to ensure correct settings (trees, contexts, passwords, etc.) are correctly set.
 
-* 4. Utilities *
+## 4. No-change Syncing ##
 
-Starting with alpine-backup 0.61, there is a utils/ directory containing
-a few useful scripts that simplify day-to-day backup tasks.
+After running a backup for a while, you will probably want to sync it from server to server, in case of a crash,
+alpine-backup makes this very simple; all you do is provide the slave server with a copy of the configuration files
+and then run alpine-backup like this:
 
-- The alp-cleanup script uses find to remove old backups that were not properly removed for some reason
-- alpsync.sh is designed to synchronize configuration files between multiple backup servers
-- alp-dbrestore restores backups of MySQL databases to a restore DB of your choice
-- summary-gen.sh is a very simple script for parsing alpine-backup log files
+`syncalp <server> <item> <master>`
+(If you wish to backup all the items on a server, you can use `all` as the item.)
 
-* 5. What's new *
+## 5. Reporting Tools and other Utilities ##
 
-- directory auto-creation
-- checking for bad current links
-- MySQL backup agent
-- service start/stop agent
-- some useful maintenance scripts (utils/)
+alpine-backup 0.62 adds 2 new utilities for reporting the statuses of backups and configuration files:
+* alp-getdata: Connects to specified backup servers and gets the results of backups on those servers
+* alp-report: Displays the results of alp-getdata and displays a dump of configuration files
 
-* 6. Features to implement *
+Of course, some useful utilities for 0.61 are still here:
+* alp-dbrestore: Restores backups of MySQL databases to a restore DB of your choice
+* alp-synconf.sh: Syncs configuration files between backup servers
+* summary-gen.sh: A simple script that adds a summary of backup messages (and statistics; new in 0.62) to the end of mail messages
 
-- support for other file system mounting
-- support for backup of more than one item at a time
- 
+## 6. What's new ##
+
+* Better delete algorithm
+* No-change syncing
+* Reporting tools
+* Multi-item backups

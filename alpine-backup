@@ -35,21 +35,21 @@ function arg_parse($argv,$argc)
    $conf = parse_ini_file(CONFIG_PATH.$server,TRUE);
 
    $sync = isset($argv[3])? $argv[3]: FALSE;
-  
+
    if (!isset($item) || $item == "all") #Backup everything
     {
       foreach ($conf as $item => $config)
        passthru($argv[0]." $server $item");
     }
-    
+
    else if (!isset($conf["$item"]))
      exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
-  
+
    if ($sync)
     echo("* Syncing $item on $server from $sync\n");
    else
     echo("* Backing up $item on $server\n");
-  
+
 
   wrapper($conf,$item,$sync);
  }
@@ -61,8 +61,8 @@ function mount_roo($data,$umount = FALSE)
   list($server,$volume) = explode(":",$host);
 
   require_once(INCLUDE_PATH."$type-roo"); #Loads by filesystem
-  
-  if (!$umount) 
+
+  if (!$umount)
    {
     $return = mountfs($user,$server,$volume,$point);
     if (!$return)
@@ -95,7 +95,7 @@ function delete_old_scan($dest,$keep)
   foreach($internal as $stamp => $file)
    {
     if ($stamp <= $delete_after) #If the file timestamp is lower than the threshold
-     passthru("rm -r $dest/$file"); 
+     passthru("rm -r $dest/$file");
    }
  }
 
@@ -124,12 +124,12 @@ function wrapper($conf,$item,$sync)
 
   if (isset($mount) && !$sync)
    mount_roo($mount,TRUE); #Unmount
- 
+
   if (isset($delete_after) && !$flag) #Don't remove old backups if the current one fails (just in case)
    delete_old_scan($dest,$delete_after); #Remove old backups
-  
+
   if (!$flag)
-   die(1); #Return exit code for bad backup  
+   die(1); #Return exit code for bad backup
  }
 
 function backup($opt,$src,$dest,$date,$name,$sync)
@@ -145,12 +145,12 @@ function backup($opt,$src,$dest,$date,$name,$sync)
    {
     echo("* Backup Failure ($name): rsync did not finish successfully.\n");
     return(FALSE);
-   }  
+   }
 
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
   echo("* Backup Successful: $name\n\n\n");
- 
+
   return(TRUE);
  }
 

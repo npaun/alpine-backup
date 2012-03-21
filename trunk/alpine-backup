@@ -22,7 +22,7 @@ function arg_parse($argv,$argc)
   if (@$argv[1] == "-h")
    {
     echo("alpine-backup Version: 0.62\n");
-    echo("Syntax: ".$argv[0]." <server> <item>\n");
+    echo("Syntax: ".basename($argv[0])." <server> <item>\n");
     echo("Copyright 2007-2011 Nicholas Paun\n");
     die(0);
    }

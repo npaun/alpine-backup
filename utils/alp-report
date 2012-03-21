@@ -56,11 +56,12 @@ function conf_report($file)
       $conf["$name"]['mount'] = "Driver: $type (file $type-roo)\n\t\tSource: $src\n\t\tMount Point: $point $notice\n";
      }
    }
+ }
 
 function mail_report()
  {
   include(DATA_PATH.'DUMP');
-  $check = call_user_func_array("array_merge", $_STATUS); #Flatten it
+  $check = call_user_func_array("array_merge",$_STATUS); #Flatten it
 
   if (array_filter($check) != $check) #Are there any FALSE values?
    echo("\033[00;31m* Some errors occurred:\033[00m\n\n");

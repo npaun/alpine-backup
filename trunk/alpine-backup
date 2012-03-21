@@ -39,7 +39,7 @@ function arg_parse($argv,$argc)
    if (!isset($item) || $item == "all") #Backup everything
     {
       foreach ($conf as $item => $config)
-       passthru($argv[0]." $server $item");
+       passthru($argv[0]." $server $item $sync");
     }
 
    else if (!isset($conf["$item"]))

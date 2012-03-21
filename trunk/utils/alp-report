@@ -1,8 +1,12 @@
 #!/usr/bin/php
 <?php
+#alp-report: Generates reports of backup statuses and configuration files
+#(C) Copyright 2012 Nicholas Paun. All Rights Reserved.
+
 define('DATE_FORMAT','Y-m-d');
 define('CONFIG_PATH','/etc/alpine-backup/');
 define('DATA_PATH','/var/log/alpine-backup/');
+
 
 function colorize($i)
  {
@@ -56,6 +60,7 @@ function conf_report($file)
       $conf["$name"]['mount'] = "Driver: $type (file $type-roo)\n\t\tSource: $src\n\t\tMount Point: $point $notice\n";
      }
    }
+  print_s($conf);
  }
 
 function mail_report()

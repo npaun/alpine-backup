@@ -1,10 +1,14 @@
 #!/usr/bin/php
 <?php
-define('OPTIONS','-a');
+#alp-getdata: Retrieves and parses mail from specified servers
+#(C) Copyright 2011-2012 Nicholas Paun. All Rights Reserved.
+
+define('OPTIONS','-a'); #No verbose
 define('SPOOL_FILE','/var/mail/root');
 define('DATA_PATH','/var/log/alpine-backup/');
 
 $_SERVERS = array("foobackup1","foobackup2","foo-offsite");
+
 
 function _var_export($var_name,$data)
  {

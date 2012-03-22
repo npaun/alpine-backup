@@ -29,4 +29,3 @@ mount = "mysql","root@localhost:drupal_db","/tmp/db_dump"
 opt = "-e 'ssh -p3134'"
 source = "test@foodev_main:/test/"
 dest = "/backup/foodev/main"
-

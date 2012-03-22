@@ -17,4 +17,3 @@ function umountfs($user,$server,$volume,$point=null)
   passthru("/opt/novell/ncl/bin/nwlogout -t foo-dev",$return);
   return(!$return);
  }
-

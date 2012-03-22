@@ -17,7 +17,7 @@ if [[ $1 = "-n" ]]; then
  exit 0
 fi
 
-echo -e "\n\e[00;32mConfiguration File Sync\e[00m" 
+echo -e "\n\e[00;32mConfiguration File Sync\e[00m"
 
 for server in $SERVERS; do
 echo -e "\n\e[01;00mSyncing to $server:\e[00m"

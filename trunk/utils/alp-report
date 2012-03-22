@@ -83,4 +83,3 @@ if (isset($argv[1])) #Configuration file is argument
  conf_report(CONFIG_PATH.$argv[1]);
 else
  mail_report();
-

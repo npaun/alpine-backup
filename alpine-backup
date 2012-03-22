@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 #alp: alpine-backup Proto6
-#(C) Copyright 2007-2011 Nicholas Paun. All Rights Reserved.
+#(C) Copyright 2007-2012 Nicholas Paun. All Rights Reserved.
 /*Knut 061*/
 
 
@@ -23,33 +23,34 @@ function arg_parse($argv,$argc)
    {
     echo("alpine-backup Version: 0.62\n");
     echo("Syntax: ".basename($argv[0])." <server> <item>\n");
-    echo("Copyright 2007-2011 Nicholas Paun\n");
+    echo("Copyright 2007-2012 Nicholas Paun\n");
     die(0);
    }
 
   if ($argc < 2 || $argc > 4)
-    exitmsg("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n",3);
+   exitmsg("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n",3);
 
-   $server = $argv[1];
-   $item = @$argv[2];
+  $server = $argv[1];
+  $item = isset($argv[2])? $argv[2]: "all";
+  $sync = isset($argv[3])? $argv[3]: FALSE;
+
+  if (file_exists(CONFIG_PATH.$server))
    $conf = parse_ini_file(CONFIG_PATH.$server,TRUE);
+  else
+   exitmsg("* Cannot load $server: Non-existent file\n");
 
-   $sync = isset($argv[3])? $argv[3]: FALSE;
+  if ($item == "all") #Backup everything
+   {
+    foreach ($conf as $item => $config)
+     passthru($argv[0]." $server $item $sync");
+   }
+  else if (!isset($conf["$item"]))
+   exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
 
-   if (!isset($item) || $item == "all") #Backup everything
-    {
-      foreach ($conf as $item => $config)
-       passthru($argv[0]." $server $item $sync");
-    }
-
-   else if (!isset($conf["$item"]))
-     exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
-
-   if ($sync)
-    echo("* Syncing $item on $server from $sync\n");
-   else
-    echo("* Backing up $item on $server\n");
-
+  if ($sync)
+   echo("* Syncing $item on $server from $sync\n");
+  else
+   echo("* Backing up $item on $server\n");
 
   wrapper($conf,$item,$sync);
  }

@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-#alp-report: Generates reports of backup statuses and configuration files
+#alp-report: Displays backup statuses and config dumps
 #(C) Copyright 2012 Nicholas Paun. All Rights Reserved.
 
 define('DATE_FORMAT','Y-m-d');
@@ -33,6 +33,14 @@ function print_s($array)
 
     echo("\n");
    }
+ }
+
+function help_message($self)
+ {
+  echo("alp-report: Displays backup statuses and config dumps\n");
+  echo("(C) Copyright 2012 Nicholas Paun. All Rights Reserved.\n\n");
+  echo("Syntax: ".basename($self)." for backup statuses,\n");
+  echo("Or: ".basename($self)." <server> for a config dump\n");
  }
 
 function conf_report($file)
@@ -80,6 +88,11 @@ function mail_report()
  }
 
 if (isset($argv[1])) #Configuration file is argument
- conf_report(CONFIG_PATH.$argv[1]);
+ { 
+  if ($argv[1] == "-h")
+   help_message($argv[0]);
+  else
+   conf_report(CONFIG_PATH.$argv[1]);
+ }
 else
  mail_report();

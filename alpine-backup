@@ -13,7 +13,7 @@ define('CONFIG_PATH','/etc/alpine-backup/');
 
 function exitmsg($message,$code)
  {
-  echo($message);
+  fwrite(STDERR,$message);
   die($code);
  }
 
@@ -151,7 +151,7 @@ function backup($opt,$src,$dest,$date,$name,$sync)
 
   unlink("$dest/current");
   symlink("$dest/$date","$dest/current");
-  echo("* Backup Successful: $name\n\n\n");
+  echo("* Backup Successful: $name\n");
 
   return(TRUE);
  }

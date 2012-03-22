@@ -67,8 +67,8 @@ function mount_roo($data,$umount = FALSE)
    {
     $return = mountfs($user,$server,$volume,$point);
     if (!$return)
-      exitmsg("* Failed to mount $volume: mount script unsuccessful.\n",2);
-    }
+     exitmsg("* Failed to mount $volume: mount script unsuccessful.\n",2);
+   }
   else
    {
     $return = umountfs($user,$server,$volume,$point);
@@ -116,7 +116,7 @@ function wrapper($conf,$item,$sync)
   extract($conf["$item"]); #Simplifies variables
 
   if (isset($mount) && !$sync) #Don't actually mount when syncing
-    mount_roo($mount); #Mount
+   mount_roo($mount); #Mount
 
   passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
   link_check($dest,$item); #Check for invalid link-dests

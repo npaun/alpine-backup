@@ -73,7 +73,7 @@ function conf_report($file)
 
 function mail_report()
  {
-  include(DATA_PATH.'DUMP');
+  require_once(DATA_PATH.'DUMP');
   $check = call_user_func_array("array_merge",$_STATUS); #Flatten it
 
   if (array_filter($check) != $check) #Are there any FALSE values?
@@ -85,6 +85,7 @@ function mail_report()
    $colorized["$backup_server"] = array_map("colorize",$data);
 
   print_s($colorized);
+  echo("Report generated at $_TIME.\n");
  }
 
 if (isset($argv[1])) #Configuration file is argument

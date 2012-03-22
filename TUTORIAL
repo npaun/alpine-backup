@@ -40,9 +40,9 @@ Or to backup all the items on a server:
 | ------------- | --------------------------------------------------------------------------- |
 | source 	      | Specifies the source of the backup. This may be local or remote.            |
 | dest 	        | Specifies the destination of the backup. This may be local or remote.       |
-| opt 	         | Sets custom options to be passed to rsync.  Specific to this volume.        |           
-| mount         | Causes mounting of specified volumes. More on this later.                   | 
-| delete_after  | Causes old backups to be deleted after the specified time. (e.g. '30 days') |          
+| opt 	         | Sets custom options to be passed to rsync.  Specific to this volume.        |
+| mount         | Causes mounting of specified volumes. More on this later.                   |
+| delete_after  | Causes old backups to be deleted after the specified time. (e.g. '30 days') |
 
 ## 3. Mount Driver Setup ##
 
@@ -71,7 +71,7 @@ and then run alpine-backup like this:
 
 alpine-backup 0.62 adds 2 new utilities for reporting the statuses of backups and configuration files:
 * alp-getdata: Connects to specified backup servers and gets the results of backups on those servers
-* alp-report: Displays the results of alp-getdata and displays a dump of configuration files
+* alp-report: Displays the results of alp-getdata and dumps of configuration files
 
 Of course, some useful utilities for 0.61 are still here:
 * alp-dbrestore: Restores backups of MySQL databases to a restore DB of your choice

@@ -37,7 +37,7 @@ function arg_parse($argv,$argc)
   if (file_exists(CONFIG_PATH.$server))
    $conf = parse_ini_file(CONFIG_PATH.$server,TRUE);
   else
-   exitmsg("* Cannot load $server: Non-existent file\n");
+   exitmsg("* Cannot load $server: Non-existent file\n",3);
 
   if ($item == "all") #Backup everything
    {

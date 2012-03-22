@@ -1,6 +1,6 @@
 #!/bin/bash
 #alpine-backup installer
-#(C) Copyright 2009-2011 Nicholas Paun. All Rights Reserved.
+#(C) Copyright 2009-2012 Nicholas Paun. All Rights Reserved.
 
 INSTALLDIR="/alpine-backup" #Directory to copy all files to (if selected
 
@@ -9,8 +9,8 @@ LIBDIR="/usr/lib/alpine-backup/" #Directory to copy mount drivers, etc.
 CONFDIR="/etc/alpine-backup/" #Directory to copy configuration files
 
 if [[ $1 = "-h" ]]; then
- echo "alpine-backup installer (for version 0.61)"
- echo "(C) Copyright 2009-2011 Nicholas Paun. All Rights Reserved."
+ echo "alpine-backup installer (for version 0.62)"
+ echo "(C) Copyright 2009-2012 Nicholas Paun. All Rights Reserved."
  echo "Usage: $0 for normal install or $0 -d <directory> to install in directory"
  exit 0
 fi

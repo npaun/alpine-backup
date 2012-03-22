@@ -3,6 +3,7 @@
 #alp-getdata: Retrieves and parses mail from specified servers
 #(C) Copyright 2011-2012 Nicholas Paun. All Rights Reserved.
 
+
 define('OPTIONS','-a'); #No verbose
 define('SPOOL_FILE','/var/mail/root');
 define('DATA_PATH','/var/log/alpine-backup/');
@@ -15,10 +16,9 @@ function _var_export($var_name,$data)
   $return = "\$$var_name = ";
   $return .= var_export($data,TRUE);
   $return .= ";\n\n";
-  
+
   return($return);
  }
-  
 
 function parse_mail($file)
  {
@@ -34,7 +34,7 @@ function parse_mail($file)
     preg_match('{\*\s(Backing up|Syncing)\s([\w-]*)\s+on\s+([\w-]*)}',$mail,$match); #Get type, item and server
     $server = @$match[3];
 
-    if (!isset($server)) 
+    if (!isset($server))
      continue; #Don't bother processing non-alpine-backup mail
 
     if (strpos($mail,'Fail') !== FALSE) #Any failure messages?
@@ -46,9 +46,8 @@ function parse_mail($file)
      $status["$server"] = $works;
     else
      $status["Sync $server"] = $works;
-
-   return($status);
-  }
+   }
+  return($status);
  }
 
 function main($servers)
@@ -58,16 +57,16 @@ function main($servers)
 
   foreach ($servers as $backup_server)
    {
-     passthru("rsync ".OPTIONS." $backup_server:".SPOOL_FILE." ".DATA_PATH.$backup_server,$return); #Use rsync because spools are probably similar from day to day
+    passthru("rsync ".OPTIONS." $backup_server:".SPOOL_FILE." ".DATA_PATH.$backup_server,$return); #Use rsync because spools are probably similar from day to day
 
-     if (!$return)
-      {
-       echo("* Retrieved spool from $backup_server\n");
-       $data = parse_mail(DATA_PATH.$backup_server); #Parse the backup server's spool file
-       $output .= _var_export("_STATUS['$backup_server']",$data); #Dump in chunks, for more readability
-      }
-     else
-      echo("* Failed to get data from $backup_server\n");
+    if (!$return)
+     {
+      echo("* Retrieved spool from $backup_server\n");
+      $data = parse_mail(DATA_PATH.$backup_server); #Parse the backup server's spool file
+      $output .= _var_export("_STATUS['$backup_server']",$data); #Dump in chunks, for more readability
+     }
+    else
+     echo("* Failed to get data from $backup_server\n");
    }
 
   $output .= "?>";

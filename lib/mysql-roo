@@ -24,4 +24,3 @@ function umountfs($user,$server,$db,$dumpdir="/tmp/db_dump")
   passthru("rm -r $dumpdir/",$return);
   return(!$return);
  }
-

@@ -21,7 +21,7 @@ DATABASE="$1" #the database to restore
 
 mysql -p$PASSWORD -e "CREATE DATABASE IF NOT EXISTS $DATABASE;" #create restore DB if it doesn't exsist
 
-for TABLE in $BACKUPDIR; do 
+for TABLE in $BACKUPDIR; do
  mysql -p$PASSWORD $DATABASE < $TABLE
- echo "Restored - $TABLE" 
+ echo "Restored - $TABLE"
 done

@@ -44,15 +44,16 @@ function arg_parse($argv,$argc)
     foreach ($conf as $item => $config)
      passthru($argv[0]." $server $item $sync");
    }
-  else if (!isset($conf["$item"]))
+  else if (isset($conf["$item"]))
+   wrapper($conf,$item,$sync);
+  else
    exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
+
 
   if ($sync)
    echo("* Syncing $item on $server from $sync\n");
   else
    echo("* Backing up $item on $server\n");
-
-  wrapper($conf,$item,$sync);
  }
 
 function mount_roo($data,$umount = FALSE)

@@ -45,7 +45,7 @@ function help_message($self)
 
 function conf_report($file)
  {
-  if (file_exists(CONFIG_PATH.$file))
+  if (file_exists($file))
    $conf = parse_ini_file($file,TRUE);
   else
    {

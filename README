@@ -16,6 +16,11 @@
  4. Set up the environment
  5. Try it out!
 
+To upgrade or move an installation of alpine-backup, do not simply rsync it around; use the ./install script. It modifies alpine-backup 
+to use the correct paths for the local environment and makes sure there are no old-style configuration declarations hanging around.
+
+NOTE: The install script overwrites the utils/ and lib/ directories, so make sure to back them up and restore as needed.
+
 ## 2. Misc. ##
 
 Have a lot of fun!

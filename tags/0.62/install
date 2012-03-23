@@ -1,0 +1,48 @@
+#!/bin/bash
+#alpine-backup installer
+#(C) Copyright 2009-2012 Nicholas Paun. All Rights Reserved.
+
+INSTALLDIR="/alpine-backup" #Directory to copy all files to (if selected
+
+BINDIR="/usr/sbin" #Directory to copy code
+LIBDIR="/usr/lib/alpine-backup/" #Directory to copy mount drivers, etc.
+CONFDIR="/etc/alpine-backup/" #Directory to copy configuration files
+
+if [[ $1 = "-h" ]]; then
+ echo "alpine-backup installer (for version 0.62)"
+ echo "(C) Copyright 2009-2012 Nicholas Paun. All Rights Reserved."
+ echo "Usage: $0 for normal install or $0 -d <directory> to install in directory"
+ exit 0
+fi
+
+which php &> /dev/null
+if [[ $? != 0 ]]; then
+ echo "PHP not found. Exiting."
+ exit 1
+fi
+
+which rsync &> /dev/null
+if [[ $? != 0 ]]; then
+ echo "rsync not found. Exiting."
+ exit 1
+fi
+
+if [[ $1 = "-d" ]]; then
+ if [[ $2 != "" ]]; then
+  INSTALLDIR="$2" #Allow user to choose installdir
+ fi
+ rsync -av ./ $INSTALLDIR
+ sed -i s_/etc/alpine-backup/_$INSTALLDIR/conf/_gi $INSTALLDIR/alpine-backup $INSTALLDIR/utils/* #Edit code to match installdir
+ sed -i s_/usr/lib/alpine-backup/_$INSTALLDIR/lib/_gi $INSTALLDIR/alpine-backup
+ sed -i s_/var/log/alpine-backup/_$INSTALLDIR/data/_gi $INSTALLDIR/utils/* #Get all the utillities on the right track, too.
+
+ sed -i s_" ago"__gi $INSTALLDIR/conf/* #### CORRECTS OLD DELETE_AFTER VALUES (prevents deletion of all backups)
+else
+ rsync -av ./*alp* $BINDIR
+ rsync -av ./lib/ $LIBDIR
+ rsync -av ./conf/ $CONFDIR
+
+ sed -i s_" ago"__gi $CONFDIR/* #### CORRECTS OLD DELETE_AFTER VALUES (prevents deletion of all backups)
+fi
+
+exit 0

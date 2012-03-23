@@ -1,0 +1,160 @@
+#!/usr/bin/php
+<?php
+#alp: alpine-backup Proto6
+#(C) Copyright 2007-2012 Nicholas Paun. All Rights Reserved.
+/*Icicle 062*/
+
+
+define('OPTIONS','-av');
+define('DATE_FORMAT','Y-m-d');
+define('INCLUDE_PATH','/usr/lib/alpine-backup/');
+define('CONFIG_PATH','/etc/alpine-backup/');
+
+
+function exitmsg($message,$code)
+ {
+  fwrite(STDERR,$message);
+  die($code);
+ }
+
+function arg_parse($argv,$argc)
+ {
+  if (@$argv[1] == "-h")
+   {
+    echo("alpine-backup Version: 0.62\n");
+    echo("Syntax: ".basename($argv[0])." <server> [item] [sync]\n");
+    echo("Copyright 2007-2012 Nicholas Paun\n");
+    die(0);
+   }
+
+  if ($argc < 2 || $argc > 4)
+   exitmsg("Invalid number of arguments. Try ".$argv[0]." -h for more info.\n",3);
+
+  $server = $argv[1];
+  $item = isset($argv[2])? $argv[2]: "all";
+  $sync = isset($argv[3])? $argv[3]: FALSE;
+
+  if (file_exists(CONFIG_PATH.$server))
+   $conf = parse_ini_file(CONFIG_PATH.$server,TRUE);
+  else
+   exitmsg("* Cannot backup $server: File does not exist.\n",3);
+
+  if ($item == "all") #Backup everything
+   {
+    foreach ($conf as $item => $config)
+     passthru($argv[0]." $server $item $sync");
+   }
+  else if (isset($conf["$item"]))
+   wrapper($server,$conf,$item,$sync);
+  else
+   exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
+ }
+
+function mount_roo($data,$umount = FALSE)
+ {
+  @list($type,$src,$point) = explode(",",$data);
+  list($user,$host) = explode("@",$src);
+  list($server,$volume) = explode(":",$host);
+
+  require_once(INCLUDE_PATH."$type-roo"); #Loads by filesystem
+
+  if (!$umount)
+   {
+    $return = mountfs($user,$server,$volume,$point);
+    if (!$return)
+     exitmsg("* Failed to mount $volume: mount script unsuccessful.\n",2);
+   }
+  else
+   {
+    $return = umountfs($user,$server,$volume,$point);
+    if (!$return)
+     echo("* WARNING: Could not unmount $volume.\n");
+   }
+ }
+
+function delete_old_scan($dest,$keep)
+ {
+  $dir = scandir("$dest/"); #Load directory as array
+  $delete_after = strtotime($keep." ago"); #Convert config option to unix time
+
+  echo("* Deleting backups older than $keep ago (".date(DATE_FORMAT,$delete_after).").\n");
+
+  foreach($dir as $i => $file)
+   {
+    $unix = strtotime($file); #Convert directory name to unix time
+
+    if ($unix !== FALSE && $file != '.' &&  $file != '..') #Remove bogus entries
+      $internal["$unix"] = $file;
+   }
+
+  ksort($internal); #Sort the array
+
+  foreach($internal as $stamp => $file)
+   {
+    if ($stamp <= $delete_after) #If the file timestamp is lower than the threshold
+     passthru("rm -r $dest/$file");
+   }
+ }
+
+function link_check($dest,$name)
+ {
+  if (is_link("$dest/current"))
+   {
+    $link = @readlink("$dest/current"); #Find where the link is pointing to
+    if (!file_exists($link))
+     exitmsg("* Backup Failure ($name): The current symlink points to a non-existent location.\n",4);
+   }
+ }
+
+function wrapper($server,$conf,$item,$sync)
+ {
+  $date = date(DATE_FORMAT);
+  extract($conf["$item"]); #Simplifies variables
+
+  if ($sync)
+   echo("\n* Syncing $item on $server from $sync\n");
+  else
+   echo("\n* Backing up $item on $server\n");
+
+  if (isset($mount) && !$sync) #Don't actually mount when syncing
+   mount_roo($mount); #Mount
+
+  passthru("mkdir -p $dest"); #Auto-create destination directory structure (mkdir() creates one level)
+  link_check($dest,$item); #Check for invalid link-dests
+
+  $flag = backup(@$opt,$source,$dest,$date,$item,$sync); #Hold errors until cleanup is done
+
+  if (isset($mount) && !$sync)
+   mount_roo($mount,TRUE); #Unmount
+
+  if (isset($delete_after) && $flag) #Don't remove old backups if the current one fails (just in case)
+   delete_old_scan($dest,$delete_after); #Remove old backups
+
+  if (!$flag)
+   die(1); #Return exit code for bad backup
+ }
+
+function backup($opt,$src,$dest,$date,$name,$sync)
+ {
+  $_opt = OPTIONS;
+
+  if (!$sync) #Doing actual backup
+   passthru("rsync $_opt $opt --link-dest $dest/current $src $dest/$date",$return);
+  else
+   passthru("rsync $_opt $opt --link-dest $dest/current $sync:$dest/current/ $dest/$date",$return); #Get current backup on master server (using dest) and send it to dest on the local machine
+
+  if ($return != 0)
+   {
+    echo("* Backup Failure ($name): rsync did not finish successfully.\n");
+    return(FALSE);
+   }
+
+  unlink("$dest/current");
+  symlink("$dest/$date","$dest/current");
+  echo("* Backup Successful: $name\n");
+
+  return(TRUE);
+ }
+
+arg_parse($argv,$argc);
+?>

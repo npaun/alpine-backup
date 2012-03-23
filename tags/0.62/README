@@ -1,0 +1,47 @@
+#README for alpine-backup 0.62
+#(C) Copyright 2010-2012 Nicholas Paun. All Rights Reserved.
+
+## Contents ##
+
+1. How to Install
+2. Misc.
+3. Changelog
+4. Contact
+
+## 1. How to Install ##
+
+ 1. Run ./install
+ 2. Read TUTORIAL
+ 3. Modify the example configuration file to your needs
+ 4. Set up the environment
+ 5. Try it out!
+
+To upgrade or move an installation of alpine-backup, do not simply rsync it around; use the ./install script. It modifies alpine-backup 
+to use the correct paths for the local environment and makes sure there are no old-style configuration declarations hanging around.
+
+NOTE: The install script overwrites the utils/ and lib/ directories, so make sure to back them up and restore as needed.
+
+## 2. Misc. ##
+
+Have a lot of fun!
+
+## 3. Changelog ##
+
+* Version 0.62
+ * Fixed mount agent bugs
+ * Multi-item backups
+ * Better delete algorithm
+ * No-change syncing
+ * Reporting tools
+
+* Version 0.61
+ * Directory auto-creation
+ * Checking for bad current links
+ * MySQL and service start/stop agents
+ * utils/ directory
+
+* Sixth Version
+ * complete rewrite
+
+## 4. Contact ##
+Nicholas Paun <np@icebergsystems.ca>, http://icebergsystems.ca/

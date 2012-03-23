@@ -1,0 +1,110 @@
+#!/usr/bin/php
+<?php
+#alp-report: Displays backup statuses and config dumps
+#(C) Copyright 2012 Nicholas Paun. All Rights Reserved.
+
+define('DATE_FORMAT','Y-m-d');
+define('CONFIG_PATH','/etc/alpine-backup/');
+define('DATA_PATH','/var/log/alpine-backup/');
+
+
+function colorize($i)
+ {
+  $return = "\033[00;";
+
+  if ($i)
+   $return .= "32m OK ";
+  else
+   $return .= "31m FAIL ";
+
+  $return .= "\033[00m";
+
+  return($return);
+ }
+
+function print_s($array)
+ {
+  foreach ($array as $l2_key => $l2_array)
+   {
+    echo("[$l2_key]\n");
+
+    foreach ($l2_array as $key => $value)
+     echo("\t$key: $value\n");
+
+    echo("\n");
+   }
+ }
+
+function help_message($self)
+ {
+  echo("alp-report: Displays backup statuses and config dumps\n");
+  echo("(C) Copyright 2012 Nicholas Paun. All Rights Reserved.\n\n");
+  echo("Syntax: ".basename($self)." for backup statuses,\n");
+  echo("Or: ".basename($self)." <server> for a config dump\n");
+ }
+
+function conf_report($file)
+ {
+  if (file_exists($file))
+   $conf = parse_ini_file($file,TRUE);
+  else
+   {
+    echo("$file: No such file or directory\n");
+    die(1);
+   }
+
+  foreach ($conf as $name => $item)
+   {
+    if (isset($item['delete_after']))
+     {
+      $delete_after = $item['delete_after'];
+      $as_date = date(DATE_FORMAT,strtotime($delete_after." ago"));
+      $conf["$name"]['delete_after'] .= " (Oldest backup: $as_date)";
+     }
+
+    if (isset($item['mount']))
+     {
+      @list($type,$src,$point) = explode(",",$item['mount']);
+
+      if ($item['source'] == $point)
+       $notice = "(OK)";
+      else
+       $notice = "(Does not match source!)";
+
+      $conf["$name"]['mount'] = "Driver: $type (file $type-roo)\n\t\tSource: $src\n\t\tMount Point: $point $notice\n";
+     }
+   }
+  print_s($conf);
+ }
+
+function mail_report()
+ {
+  require_once(DATA_PATH.'DUMP');
+  $check = call_user_func_array("array_merge",$_STATUS); #Flatten it
+
+  if (array_filter($check) != $check) #Are there any FALSE values?
+   echo("\033[00;31m* Some errors occurred:\033[00m\n\n");
+  else
+   echo("\033[00;32m* No problems:\033[00m\n\n");
+
+  foreach ($_STATUS as $backup_server => $data)
+   $colorized["$backup_server"] = array_map("colorize",$data);
+
+  print_s($colorized);
+  echo("Report generated at $_TIME.\n");
+
+  if (array_filter($check) != $check)
+   die(1);
+  else
+   die(0);
+ }
+
+if (isset($argv[1])) #Configuration file is argument
+ { 
+  if ($argv[1] == "-h")
+   help_message($argv[0]);
+  else
+   conf_report(CONFIG_PATH.$argv[1]);
+ }
+else
+ mail_report();

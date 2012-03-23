@@ -4,4 +4,4 @@
 echo -e "\n\n>>> Summary: <<<"
 grep "* Backup" /tmp/backup-out.$$
 rm /tmp/backup-out.$$
-#echo "(Backup finished at `date '+%F %R'`)"
+#echo -e "\n(Backup finished at `date '+%F %R'`)"

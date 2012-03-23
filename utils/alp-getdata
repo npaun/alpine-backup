@@ -37,7 +37,7 @@ function parse_mail($file)
     if (!isset($server))
      continue; #Don't bother processing non-alpine-backup mail
 
-    if (preg_match('{\* (Backup Failure|Failed to mount)}',$mail) !== FALSE) #Any failure messages?
+    if (preg_match('{\* (Backup Failure|Failed to mount)}',$mail)) #Any failure messages?
      $works = FALSE;
     else
      $works = TRUE;

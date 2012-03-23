@@ -45,15 +45,9 @@ function arg_parse($argv,$argc)
      passthru($argv[0]." $server $item $sync");
    }
   else if (isset($conf["$item"]))
-   wrapper($conf,$item,$sync);
+   wrapper($server,$conf,$item,$sync);
   else
    exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
-
-
-  if ($sync)
-   echo("* Syncing $item on $server from $sync\n");
-  else
-   echo("* Backing up $item on $server\n");
  }
 
 function mount_roo($data,$umount = FALSE)
@@ -112,10 +106,15 @@ function link_check($dest,$name)
    }
  }
 
-function wrapper($conf,$item,$sync)
+function wrapper($server,$conf,$item,$sync)
  {
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
+
+  if ($sync)
+   echo("* Syncing $item on $server from $sync\n");
+  else
+   echo("* Backing up $item on $server\n");
 
   if (isset($mount) && !$sync) #Don't actually mount when syncing
    mount_roo($mount); #Mount

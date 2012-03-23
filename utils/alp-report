@@ -45,7 +45,13 @@ function help_message($self)
 
 function conf_report($file)
  {
-  $conf = parse_ini_file($file,TRUE);
+  if (file_exists(CONFIG_PATH.$file))
+   $conf = parse_ini_file($file,TRUE);
+  else
+   {
+    echo("$file: No such file or directory\n");
+    die(1);
+   }
 
   foreach ($conf as $name => $item)
    {
@@ -86,6 +92,11 @@ function mail_report()
 
   print_s($colorized);
   echo("Report generated at $_TIME.\n");
+
+  if (array_filter($check) != $check)
+   die(1);
+  else
+   die(0);
  }
 
 if (isset($argv[1])) #Configuration file is argument

@@ -112,9 +112,9 @@ function wrapper($server,$conf,$item,$sync)
   extract($conf["$item"]); #Simplifies variables
 
   if ($sync)
-   echo("* Syncing $item on $server from $sync\n");
+   echo("\n* Syncing $item on $server from $sync\n");
   else
-   echo("* Backing up $item on $server\n");
+   echo("\n* Backing up $item on $server\n");
 
   if (isset($mount) && !$sync) #Don't actually mount when syncing
    mount_roo($mount); #Mount
@@ -157,3 +157,4 @@ function backup($opt,$src,$dest,$date,$name,$sync)
  }
 
 arg_parse($argv,$argc);
+?>

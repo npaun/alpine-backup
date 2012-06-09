@@ -20,13 +20,13 @@ these files.
 
 There are also some global options at the top of the alpine-backup file.
 These are: date format, default options, include path and the path to the
-configuration file. rsync is assumed to be in your path. You may need to
-change the shebang line at the top to the right path for *php5*.
+configuration file. rsync(1) is assumed to be in your path. You may need to
+change the shebang line at the top to the right path for php(1).
 
 After configuring, try the backup manually before adding it to your crontab.
 You will setup mount points first. You may see errors about 'current' or
  'deleting old backups'; these are normal and will probably only occur the first time. 
-When you are using cron, you can view the logs by running *mail* on your system.
+When you are using cron(1), you can view the logs by running mail(1) on your system.
 
 The syntax:
 `alpine-backup <server> <item>`
@@ -40,7 +40,7 @@ Or to backup all the items on a server:
 | ------------- | --------------------------------------------------------------------------- |
 | source 	      | Specifies the source of the backup. This may be local or remote.            |
 | dest 	        | Specifies the destination of the backup. This may be local or remote.       |
-| opt 	         | Sets custom options to be passed to rsync.  Specific to this volume.        |
+| opt 	         | Sets custom options to be passed to rsync(1).  Specific to this volume.        |
 | mount         | Causes mounting of specified volumes. More on this later.                   |
 | delete_after  | Causes old backups to be deleted after the specified time. (e.g. '30 days') |
 
@@ -70,10 +70,12 @@ and then run alpine-backup like this:
 ## 5. Reporting Tools and other Utilities ##
 
 alpine-backup 0.62 adds 2 new utilities for reporting the statuses of backups and configuration files:
+
 * alp-getdata: Connects to specified backup servers and gets the results of backups on those servers
 * alp-report: Displays the results of alp-getdata and dumps of configuration files
 
-Of course, some useful utilities for 0.61 are still here:
+Of course, some useful utilities from 0.61 are still here:
+
 * alp-dbrestore: Restores backups of MySQL databases to a restore DB of your choice
 * alp-synconf.sh: Syncs configuration files between backup servers
 * summary-gen.sh: A simple script that adds a summary of backup messages (and statistics; new in 0.62) to the end of mail messages

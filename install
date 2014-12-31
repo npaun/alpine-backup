@@ -4,8 +4,8 @@
 
 INSTALLDIR="/alpine-backup" #Directory to copy all files to (if selected
 
-BINDIR="/usr/sbin" #Directory to copy code
-LIBDIR="/usr/lib/alpine-backup/" #Directory to copy mount drivers, etc.
+BINDIR="/usr/local/sbin" #Directory to copy code
+LIBDIR="/usr/local/lib/alpine-backup/" #Directory to copy mount drivers, etc.
 CONFDIR="/etc/alpine-backup/" #Directory to copy configuration files
 
 ### THE MAGIC SED DETECTOR ###

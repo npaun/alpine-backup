@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 #alp: alpine-backup Proto6
 #(C) Copyright 2007-2012 Nicholas Paun. All Rights Reserved.

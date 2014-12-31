@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 #alp-getdata: Retrieves and parses mail from specified servers
 #(C) Copyright 2011-2012 Nicholas Paun. All Rights Reserved.

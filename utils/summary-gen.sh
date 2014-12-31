@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #(C) Copyright 2010-2011 Nicholas Paun. All Rights Reserved.
 
 echo -e "\n\n>>> Summary: <<<"

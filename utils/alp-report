@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 #alp-report: Displays backup statuses and config dumps
 #(C) Copyright 2012 Nicholas Paun. All Rights Reserved.

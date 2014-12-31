@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # alp-dbrestore: restore incremental database backups
 # (C) Copyright 2011 Nicholas Paun. All Rights Reserved.
 # Syntax: alp-dbrestore: <database> <backup-directory>

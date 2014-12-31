@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #(C) Copyright 2010 Nicholas Paun. All Rights Reserved.
 
 SERVERS="foobackup1 foobackup2 foo-offsite" #Set your backup servers here

@@ -74,7 +74,10 @@ function mount_roo($data,$umount = FALSE)
 
 function delete_old_scan($dest,$keep)
  {
-  $dir = scandir("$dest/"); #Load directory as array
+  global $connect;
+
+  exec("$connect \"ls -1 $dest/\"",$dir); #Read directory as array
+
   $delete_after = strtotime($keep." ago"); #Convert config option to unix time
 
   echo("* Deleting backups older than $keep ago (".date(DATE_FORMAT,$delete_after).").\n");
@@ -92,18 +95,14 @@ function delete_old_scan($dest,$keep)
   foreach($internal as $stamp => $file)
    {
     if ($stamp <= $delete_after) #If the file timestamp is lower than the threshold
-     passthru("rm -r $dest/$file");
+     dest_exec("rm -r $dest/$file");
    }
  }
 
 function link_check($dest,$name)
  {
-  if (is_link("$dest/current"))
-   {
-    $link = @readlink("$dest/current"); #Find where the link is pointing to
-    if (!file_exists($link))
+  if (!dest_exec("sh -c 'if test -L $dest/current; then  test -e `readlink -f $dest/current`; fi'"))
      exitmsg("* Backup Failure ($name): The current symlink points to a non-existent location.\n",4);
-   }
  }
 
 function dest_connect($dest,$opt)
@@ -127,8 +126,8 @@ function dest_exec($command)
  {
    global $connect;
 
-   passthru("$connect $command",$return);
-   return($return);
+   passthru("$connect \"$command\"",$return);
+   return(!$return);
  }
 
 function wrapper($server,$conf,$item,$sync)
@@ -151,7 +150,7 @@ function wrapper($server,$conf,$item,$sync)
 
 
   dest_exec("mkdir -p $local_dest"); #Auto-create destination directory structure
-  link_check($dest,$item); #Check for invalid link-dests
+  link_check($local_dest,$item); #Check for invalid link-dests
 
   $flag = backup(@$opt,$source,$dest,$local_dest,$date,$item,$sync); #Hold errors until cleanup is done
 
@@ -180,9 +179,10 @@ function backup($opt,$src,$dest,$local_dest,$date,$name,$sync)
     return(FALSE);
    }
 
-  unlink("$dest/current");
-  symlink("$dest/$date","$dest/current");
-  echo("* Backup Successful: $name\n");
+  dest_exec("rm $dest/current");
+  dest_exec("ln -s $dest/$date $dest/current");
+  
+echo("* Backup Successful: $name\n");
 
   return(TRUE);
  }

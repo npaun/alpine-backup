@@ -12,7 +12,7 @@ echo "PHP Version: `php -v`" || (echo "No PHP"; exit 1)
 echo -e "\n\e[00;32mYour Crontab\e[00m"
 grep "alp" /etc/crontab
 
-if [[ $1 = "-n" ]]; then
+if [ "$1" == "-n" ]; then
  echo -e "\n(NO SYNCING)"
  exit 0
 fi
@@ -21,5 +21,5 @@ echo -e "\n\e[00;32mConfiguration File Sync\e[00m"
 
 for server in $SERVERS; do
 echo -e "\n\e[01;00mSyncing to $server:\e[00m"
-rsync -av /alpine-backup $server:/
+rsync -av /etc/alpine-backup/ $server:/etc/alpine-backup/
 done

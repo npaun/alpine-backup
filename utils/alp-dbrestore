@@ -3,14 +3,14 @@
 # (C) Copyright 2011 Nicholas Paun. All Rights Reserved.
 # Syntax: alp-dbrestore: <database> <backup-directory>
 
-if [[ $1 = "-h" ]]; then
+if [ "$1" == "-h" ]; then
  echo "alp-dbrestore: restore incremental database backups"
  echo "(C) Copyright 2011 Nicholas Paun. All Rights Reserved."
  echo "Syntax: alp-dbrestore: <database> <backup-directory>"
  exit 0
 fi
 
-if [[ $# != 2 ]]; then
+if [ $# != 2 ]; then
  $0 -h
  exit 1
 fi

@@ -157,7 +157,7 @@ function wrapper($server,$conf,$item,$sync)
    mount_roo($mount,TRUE); #Unmount
 
   if (isset($delete_after) && $flag) #Don't remove old backups if the current one fails (just in case)
-   delete_old_scan($dest,$delete_after); #Remove old backups
+   delete_old_scan($local_dest,$delete_after); #Remove old backups
 
   if (!$flag)
    die(1); #Return exit code for bad backup
@@ -178,8 +178,8 @@ function backup($opt,$src,$dest,$local_dest,$date,$name,$sync)
     return(FALSE);
    }
 
-  dest_exec("rm $dest/current");
-  dest_exec("ln -s $dest/$date $dest/current");
+  dest_exec("rm $local_dest/current");
+  dest_exec("ln -s $local_dest/$date $local_dest/current");
   
 echo("* Backup Successful: $name\n");
 

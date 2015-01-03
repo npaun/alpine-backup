@@ -108,12 +108,27 @@ function link_check($dest,$name)
 
 function dest_connect($dest,$opt)
  {
+  global $connect;
   list($host,$path) = explode(":",$dest);
 
   if (isset($path))
-   return(array("echo $opt $host ",$path));
+	{
+		$connect = "$opt $host ";
+		return($path);
+	}
   else
-   return(array("",dest));
+	{
+	$connect = "";
+	return($dest);
+	}
+ }
+
+function dest_exec($command)
+ {
+   global $connect;
+
+   passthru("$connect $command",$return);
+   return($return);
  }
 
 function wrapper($server,$conf,$item,$sync)
@@ -121,7 +136,7 @@ function wrapper($server,$conf,$item,$sync)
   $date = date(DATE_FORMAT);
   extract($conf["$item"]); #Simplifies variables
   
-   list($dest_connect,$local_dest) = dest_connect($dest,$ssh);
+   $local_dest = dest_connect($dest,$ssh);
 
    if (isset($ssh))
      $opt .= " -e '$ssh'";
@@ -134,10 +149,11 @@ function wrapper($server,$conf,$item,$sync)
   if (isset($mount) && !$sync) #Don't actually mount when syncing
    mount_roo($mount); #Mount
 
-  passthru("$dest_connect mkdir -p $local_dest"); #Auto-create destination directory structure (mkdir() creates one level)
+
+  dest_exec("mkdir -p $local_dest"); #Auto-create destination directory structure
   link_check($dest,$item); #Check for invalid link-dests
 
-  $flag = backup(@$opt,$source,$dest,$link_dest,$date,$item,$sync); #Hold errors until cleanup is done
+  $flag = backup(@$opt,$source,$dest,$local_dest,$date,$item,$sync); #Hold errors until cleanup is done
 
   if (isset($mount) && !$sync)
    mount_roo($mount,TRUE); #Unmount

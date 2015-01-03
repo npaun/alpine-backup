@@ -148,7 +148,6 @@ function wrapper($server,$conf,$item,$sync)
   if (isset($mount) && !$sync) #Don't actually mount when syncing
    mount_roo($mount); #Mount
 
-
   dest_exec("mkdir -p $local_dest"); #Auto-create destination directory structure
   link_check($local_dest,$item); #Check for invalid link-dests
 

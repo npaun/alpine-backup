@@ -4,6 +4,9 @@
 define('DATE_FORMAT','Y-m-d');
 define('TMP_DIR','/tmp/alpine-backup/');
 
+define('RETRY_MIN',10 * 60);
+define('RETRY_MAX',25 * 60);
+
 function run_check($server,$item)
  {
   $completed_date = file_get_contents(TMP_DIR."/completed-$server-$item");
@@ -25,7 +28,7 @@ function retry_backup($server,$item)
  {
  	do
 	 {
-		$sleep = rand(1,5);
+		$sleep = rand(RETRY_MIN,RETRY_MAX);
 		echo("L Attempting backup in $sleep s.\n");
 		sleep($sleep);
 

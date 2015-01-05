@@ -1,0 +1,58 @@
+#!/usr/bin/env php
+<?php
+
+define('DATE_FORMAT','Y-m-d');
+define('TMP_DIR','/tmp/alpine-backup/');
+
+define('RETRY_MIN',10 * 60);
+define('RETRY_MAX',25 * 60);
+
+function run_check($server,$item)
+ {
+  $completed_date = file_get_contents(TMP_DIR."/completed-$server-$item");
+  $current_date = date(DATE_FORMAT);
+
+  if ($completed_date == $current_date)
+   {
+    echo("L Backup has already been performed for the date $current_date.\n");
+    return(FALSE);
+   }
+  else
+   {
+    echo("L Backup last completed for the date $completed_date, starting retry process for the date $current_date.\n");
+    return(TRUE);
+   }
+ }
+
+function retry_backup($server,$item)
+ {
+ 	do
+	 {
+		$sleep = rand(RETRY_MIN,RETRY_MAX);
+		echo("L Attempting backup in $sleep s.\n");
+		sleep($sleep);
+
+		passthru("alp $server $item",$return);
+	 } while ($return != 0);
+
+ }
+
+function record_completed($server,$item)
+ {
+  $date = date(DATE_FORMAT);
+  echo("L The backup for the date $date has been completed.\n");
+  file_put_contents(TMP_DIR."/completed-$server-$item",$date);
+ }
+
+function main($argv)
+ {
+  passthru("mkdir -p ".TMP_DIR); 
+  list(,$server,$item) = $argv;
+  if (run_check($server,$item))
+  {
+   retry_backup($server,$item);
+   record_completed($server,$item);
+  }
+ }
+
+main($argv);

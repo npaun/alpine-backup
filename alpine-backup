@@ -42,13 +42,21 @@ function arg_parse($argv,$argc)
   if ($item == "all") #Backup everything
    {
     foreach ($conf as $item => $config)
-     passthru($argv[0]." $server $item $sync");
+     {
+      passthru($argv[0]." $server $item $sync",$return);
+      if ($return)
+       $errorflag = $return;
+     }
+
+    if (isset($errorflag))
+     exitmsg("* Error(s) occured while backing up all items on $server.\n",5);
    }
   else if (isset($conf["$item"]))
    wrapper($server,$conf,$item,$sync);
   else
    exitmsg("* Cannot backup $item on $server: Invalid backup item.\n",3);
  }
+
 
 function mount_roo($data,$umount = FALSE)
  {
